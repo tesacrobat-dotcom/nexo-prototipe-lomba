@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXO — Next-gen Emission eXchange Operations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── NEXO DESIGN TOKENS — Green-Teal Theme ─── */
+:root{
+  --bg:#ffffff;
+  --surface:#f4f9f8;
+  --surface2:#e8f2f0;
+  --surface3:#dcecea;
+  --border:#d6e9e6;
+  --border2:#bdd6d2;
+  --text:#0f2e28;
+  --text2:#4e706b;
+  --text3:#8fb8b3;
+  --hover:#edf6f4;
+
+  /* NEXO accent palette — teal-green primary */
+  --blue:#0a7c6e;     --blue-bg:#e6f7f4;   --blue-bd:#9fd4cd;
+  --green:#1a9e62;    --green-bg:#e8f9ef;  --green-bd:#88d8a8;
+  --red:#d63b3b;      --red-bg:#fdedf0;    --red-bd:#f5bebe;
+  --orange:#cc6a00;   --orange-bg:#fdf2e4; --orange-bd:#f5c882;
+  --purple:#7a56a0;   --purple-bg:#f3f0f8; --purple-bd:#d0bfe8;
+  --gold:#9a7200;     --gold-bg:#fdf7de;   --gold-bd:#e0ca6a;
+  --teal:#4fd1b8;     --teal-bg:#e4f9f5;   --teal-bd:#9ae8d8;
+
+  /* Brand tokens from login */
+  --brand-dark:#0f2e28;
+  --brand-mid:#0a7c6e;
+  --brand-accent:#4fd1b8;
+
+  --nav-h:56px;
+  --sb-w:236px;
+  --r:8px;
+  --r2:12px;
+  --sh:0 1px 2px rgba(10,44,38,.05),0 3px 12px rgba(10,44,38,.07);
+  --sh2:0 0 0 1px var(--border),0 2px 8px rgba(10,44,38,.09);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:14px;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+
+/* ─── LOGIN ─── */
+#login-screen{position:fixed;inset:0;z-index:999;display:flex;overflow:hidden;background:#fff;}
+
+/* LEFT PANEL */
+.login-left{width:480px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;padding:52px 48px;background:#fff;position:relative;overflow-y:auto;}
+.login-left::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(circle,#e8e8e6 1px,transparent 1px);background-size:24px 24px;opacity:.45;pointer-events:none;}
+.login-left-inner{position:relative;z-index:1;}
+.login-brand{margin-bottom:32px;}
+.login-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:10px;}
+.login-logo-icon{width:38px;height:38px;background:#0f2e28;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.login-logo-text{font-size:22px;font-weight:900;color:#0f2e28;letter-spacing:-.04em;}
+.login-logo-text span{color:#0f7b6c;}
+.login-tagline{font-size:12px;color:var(--text3);line-height:1.6;max-width:300px;}
+.login-headline{font-size:26px;font-weight:800;color:#0f2e28;line-height:1.2;letter-spacing:-.03em;margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:28px;}
+.login-step-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:22px;}
+.role-btn{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:13px 8px;text-align:center;cursor:pointer;transition:all .18s;}
+.role-btn:hover{background:var(--surface);border-color:#b0d4cc;transform:translateY(-1px);box-shadow:0 3px 10px rgba(15,123,108,.1);}
+.role-btn.selected{background:#eefaf7;border-color:#0f7b6c;box-shadow:0 0 0 1px #0f7b6c;}
+.role-icon{font-size:20px;margin-bottom:5px;}
+.role-name{font-size:11px;font-weight:700;color:#0f2e28;margin-bottom:2px;}
+.role-desc{font-size:10px;color:var(--text2);line-height:1.3;}
+.login-field{margin-bottom:14px;}
+.login-field label{display:block;font-size:10px;font-weight:700;color:#6b7280;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em;}
+.login-field input{width:100%;background:#fff;border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);transition:border-color .15s,box-shadow .15s;outline:none;}
+.login-field input:focus{border-color:#0f7b6c;box-shadow:0 0 0 3px rgba(15,123,108,.1);}
+.login-field input::placeholder{color:var(--text3);}
+.login-hint{font-size:11px;color:var(--text3);margin-top:4px;}
+.btn-login{width:100%;background:#0f2e28;border:none;border-radius:9px;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .18s;margin-top:4px;letter-spacing:-.01em;}
+.btn-login:hover{background:#0f7b6c;transform:translateY(-1px);box-shadow:0 6px 18px rgba(15,123,108,.3);}
+.login-err{background:var(--red-bg);border:1px solid var(--red-bd);border-radius:9px;padding:10px 13px;font-size:12px;color:var(--red);margin-top:10px;display:none;}
+.login-proto{margin-top:20px;font-size:11px;color:var(--text3);text-align:center;}
+
+/* RIGHT PANEL */
+.login-right{flex:1;background:#0a2822;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:48px 44px;}
+.login-right::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 20%,rgba(15,123,108,.45) 0%,transparent 65%),radial-gradient(ellipse at 20% 80%,rgba(46,170,220,.2) 0%,transparent 55%);pointer-events:none;}
+.login-right::after{content:'';position:absolute;bottom:-120px;right:-80px;width:420px;height:420px;border-radius:50%;border:1px solid rgba(255,255,255,.05);pointer-events:none;}
+
+/* Right top */
+.lrp-top{position:relative;z-index:2;}
+.lrp-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:16px;}
+.lrp-title{font-size:38px;font-weight:900;color:#fff;line-height:1.12;letter-spacing:-.04em;margin-bottom:10px;}
+.lrp-title span{color:#4fd1b8;}
+.lrp-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:360px;}
+
+/* Feature pills */
+.lrp-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;}
+.lrp-feat{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:500;color:rgba(255,255,255,.75);backdrop-filter:blur(4px);}
+.lrp-feat-dot{width:6px;height:6px;border-radius:50%;background:#4fd1b8;flex-shrink:0;}
+
+/* Testimonial card */
+.lrp-mid{position:relative;z-index:2;}
+.lrp-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:24px;backdrop-filter:blur(8px);}
+.lrp-quote-mark{font-size:40px;color:#4fd1b8;line-height:1;margin-bottom:4px;font-family:Georgia,serif;opacity:.8;}
+.lrp-quote{font-size:14px;color:rgba(255,255,255,.85);line-height:1.75;font-style:italic;}
+.lrp-author{margin-top:16px;display:flex;align-items:center;gap:10px;}
+.lrp-author-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(79,209,184,.2);border:1px solid rgba(79,209,184,.3);font-size:14px;}
+.lrp-author-name{font-size:13px;font-weight:700;color:#fff;}
+.lrp-author-role{font-size:11px;color:rgba(255,255,255,.45);}
+
+/* Nav arrows */
+.lrp-nav{display:flex;align-items:center;gap:8px;margin-top:16px;}
+.lrp-arr{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.7);font-size:14px;}
+.lrp-arr:hover{background:rgba(255,255,255,.15);color:#fff;}
+.lrp-dots{display:flex;gap:5px;margin-left:4px;}
+.lrp-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .2s;}
+.lrp-dot.active{background:#4fd1b8;width:16px;border-radius:3px;}
+
+/* Stats row */
+.lrp-stats{display:flex;gap:16px;position:relative;z-index:2;}
+.lrp-stat{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;}
+.lrp-stat-val{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.03em;font-family:'JetBrains Mono',monospace;}
+.lrp-stat-val span{color:#4fd1b8;}
+.lrp-stat-label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.07em;margin-top:3px;}
+
+/* Decorative circle */
+.lrp-circle{position:absolute;top:40%;right:-60px;width:240px;height:240px;border-radius:50%;border:1px solid rgba(79,209,184,.12);pointer-events:none;}
+.lrp-circle2{position:absolute;top:35%;right:-110px;width:360px;height:360px;border-radius:50%;border:1px solid rgba(79,209,184,.06);pointer-events:none;}
+
+@keyframes lrpFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.lrp-card{animation:lrpFadeIn .4s ease both;}
+@keyframes loginSlideIn{from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:translateX(0);}}
+.login-left-inner{animation:loginSlideIn .5s ease both;}
+
+/* ─── APP SHELL ─── */
+#app{display:none;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);border-top:3px solid var(--brand-accent);display:flex;align-items:center;padding:0 16px;gap:12px;}
+.top-brand{display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;}
+.top-brand-icon{width:28px;height:28px;background:var(--brand-dark);border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(15,46,40,.25);}
+.top-brand-text{font-size:15px;font-weight:900;color:var(--brand-dark);letter-spacing:-.04em;}
+.top-brand-text span{color:var(--brand-accent);}
+.top-divider{width:1px;height:20px;background:var(--border);margin:0 4px;}
+.top-spacer{flex:1;}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--brand-mid);background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:999px;padding:4px 11px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--brand-accent);animation:pulse 1.5s infinite;}
+.user-pill{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px 12px 4px 5px;cursor:default;}
+.user-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--blue-bg);border:1px solid var(--blue-bd);}
+.user-name{font-size:12px;font-weight:600;color:var(--brand-dark);}
+.btn-logout{background:transparent;border:1px solid var(--border2);border-radius:var(--r);padding:5px 12px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.btn-logout:hover{border-color:var(--red);color:var(--red);background:var(--red-bg);}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--nav-h);left:0;bottom:0;width:var(--sb-w);background:var(--brand-dark);border-right:none;overflow-y:auto;z-index:100;padding:10px 8px;}
+.sb-section{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:14px 8px 4px;}
+.sb-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r);cursor:pointer;transition:all .15s;margin-bottom:1px;border:none;background:transparent;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.sb-btn:hover{background:rgba(255,255,255,.08);}
+.sb-btn.active{background:rgba(79,209,184,.15);box-shadow:inset 0 0 0 1px rgba(79,209,184,.25);}
+.sb-btn.active .sb-label{color:#fff;font-weight:600;}
+.sb-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sb-label{font-size:13px;font-weight:500;color:rgba(255,255,255,.65);}
+.sb-badge{font-size:10px;font-weight:600;padding:1px 7px;border-radius:999px;margin-left:auto;}
+.sb-badge.green{background:rgba(79,209,184,.2);color:var(--brand-accent);border:1px solid rgba(79,209,184,.3);}
+.sb-badge.red{background:rgba(214,59,59,.2);color:#f87171;border:1px solid rgba(214,59,59,.3);}
+.sb-badge.gold{background:rgba(154,114,0,.25);color:#fbbf24;border:1px solid rgba(154,114,0,.3);}
+.sb-footer{margin:16px 8px 8px;padding:14px;background:rgba(255,255,255,.06);border:1px solid rgba(79,209,184,.2);border-radius:var(--r);}
+.sb-footer-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.4);margin-bottom:4px;}
+.sb-footer-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--brand-accent);}
+.sb-footer-unit{font-size:10px;color:rgba(255,255,255,.35);margin-top:1px;}
+
+/* MAIN */
+.main-content{margin-left:var(--sb-w);padding-top:var(--nav-h);}
+.panel{display:none;padding:32px 32px 48px;max-width:1120px;}
+.panel.active{display:block;animation:fadeUp .25s ease both;}
+
+/* ─── PAGE HEADER ─── */
+.page-header{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--border);}
+.page-eyebrow{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--brand-mid);margin-bottom:6px;}
+.page-title{font-size:26px;font-weight:900;color:var(--brand-dark);line-height:1.15;letter-spacing:-.03em;margin-bottom:7px;}
+.page-sub{font-size:14px;color:var(--text2);line-height:1.65;max-width:640px;}
+
+/* ─── GRID ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.span2{grid-column:span 2;}
+.span3{grid-column:span 3;}
+.span4{grid-column:span 4;}
+
+/* ─── CARD ─── */
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:18px;transition:all .15s;}
+.card:hover{box-shadow:var(--sh);border-color:var(--border2);}
+.card.filled{background:var(--surface);border-color:var(--border2);}
+.card-ey{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.card-val{font-size:28px;font-weight:800;color:var(--brand-dark);line-height:1.1;letter-spacing:-.025em;margin-bottom:3px;}
+.card-unit{font-size:11px;color:var(--text3);}
+.card-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;margin-top:7px;}
+.d-up{background:var(--red-bg);color:var(--red);}
+.d-dn{background:var(--green-bg);color:var(--green);}
+.d-warn{background:var(--gold-bg);color:var(--gold);}
+.d-ok{background:var(--blue-bg);color:var(--blue);}
+.d-blue{background:var(--blue-bg);color:var(--blue);}
+
+/* ─── TAGS ─── */
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:5px;white-space:nowrap;border:1px solid transparent;}
+.tag.blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bd);}
+.tag.green{background:var(--green-bg);color:var(--green);border-color:var(--green-bd);}
+.tag.red{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+.tag.gold{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-bd);}
+.tag.purple{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd);}
+.tag.orange{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-bd);}
+.tag.teal{background:var(--teal-bg);color:#0a6e5d;border-color:var(--teal-bd);}
+.tag.gray{background:var(--surface2);color:var(--text2);border-color:var(--border2);}
+.tag.dark{background:var(--brand-dark);color:#fff;}
+
+/* Tier tags */
+.tier-s{background:var(--brand-dark);color:#fff;border:none;font-weight:700;}
+.tier-a{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd);font-weight:600;}
+.tier-b{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd);font-weight:600;}
+.tier-c{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-bd);font-weight:600;}
+.tier-d{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-bd);font-weight:600;}
+.tier-e{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);font-weight:600;}
+
+/* ─── TABLE ─── */
+.NEXO-table{width:100%;border-collapse:collapse;font-size:13px;}
+.NEXO-table th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-mid);border-bottom:1px solid var(--border);background:var(--surface);}
+.NEXO-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.NEXO-table tr:last-child td{border-bottom:none;}
+.NEXO-table tr:hover td{background:var(--surface);}
+
+/* ─── PROGRESS ─── */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.prog-label{font-size:12px;font-weight:500;color:var(--text2);min-width:108px;}
+.prog-bar{flex:1;height:5px;background:var(--surface2);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;transition:width 1s ease;}
+.prog-val{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text2);min-width:38px;text-align:right;}
+
+/* ─── INFO BOX ─── */
+.info-box{border-radius:var(--r);padding:12px 14px;margin-bottom:16px;border:1px solid;}
+.ib-title{font-size:12px;font-weight:600;margin-bottom:3px;}
+.info-box p{font-size:12px;color:var(--text2);line-height:1.6;}
+.info-box.blue{background:var(--blue-bg);border-color:var(--blue-bd);}
+.info-box.blue .ib-title{color:var(--blue);}
+.info-box.green{background:var(--green-bg);border-color:var(--green-bd);}
+.info-box.green .ib-title{color:var(--green);}
+.info-box.gold{background:var(--gold-bg);border-color:var(--gold-bd);}
+.info-box.gold .ib-title{color:var(--gold);}
+
+/* ─── FORMULA BLOCK ─── */
+.formula-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;}
+.formula-name{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.formula-eq{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:8px;word-break:break-all;line-height:1.5;}
+.formula-vars{font-size:12px;color:var(--text2);line-height:1.85;}
+.formula-vars strong{color:var(--text);font-weight:600;}
+
+/* ─── SENSOR CARD ─── */
+.sensor-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:16px;position:relative;overflow:hidden;transition:box-shadow .15s;}
+.sensor-card:hover{box-shadow:var(--sh);}
+.sensor-stripe{position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:12px 0 0 12px;}
+.sensor-lbl{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.sensor-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px;padding-left:10px;line-height:1.35;}
+.sensor-val{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;line-height:1;padding-left:10px;}
+.sensor-unit{font-size:10px;color:var(--text3);margin-top:2px;padding-left:10px;}
+.sensor-bar{height:3px;background:var(--surface2);border-radius:99px;margin-top:10px;overflow:hidden;}
+.sensor-bar-fill{height:100%;border-radius:99px;transition:width .5s ease;}
+.sensor-status{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:11px;font-weight:500;padding-left:10px;}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* ─── BLOCKCHAIN ─── */
+.block-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:6px;}
+.block-item.verified{border-left:3px solid var(--blue);}
+.block-item.latest{border-left:3px solid var(--brand-accent);box-shadow:0 0 0 1px var(--teal-bd);}
+.block-item.flagged{border-left:3px solid var(--red);}
+.block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.block-num{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--blue);font-size:12px;}
+.block-hash{font-family:'JetBrains Mono',monospace;color:var(--text3);font-size:10px;word-break:break-all;margin-bottom:8px;line-height:1.6;background:var(--bg);border-radius:4px;padding:6px 8px;border:1px solid var(--border);}
+.block-fields{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.bf label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);}
+.bf span{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--brand-dark);margin-top:1px;}
+.chain-link{display:flex;justify-content:center;margin:2px 0;}
+.chain-line{width:1px;height:12px;background:var(--border2);}
+
+/* ─── INCENTIVE CARD ─── */
+.inc-card{border-radius:var(--r2);padding:18px;border:1px solid;}
+.inc-card.positive{background:var(--green-bg);border-color:var(--green-bd);}
+.inc-card.negative{background:var(--red-bg);border-color:var(--red-bd);}
+.inc-title{font-size:15px;font-weight:700;margin-bottom:3px;letter-spacing:-.01em;}
+.inc-card.positive .inc-title{color:var(--green);}
+.inc-card.negative .inc-title{color:var(--red);}
+.inc-list{list-style:none;margin-top:10px;}
+.inc-list li{font-size:12px;color:var(--text2);padding:8px 0;border-bottom:1px solid rgba(10,44,38,.06);display:flex;gap:8px;align-items:flex-start;line-height:1.55;}
+.inc-list li:last-child{border-bottom:none;}
+
+/* ─── CALC INPUT ─── */
+.calc-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:9px 11px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;margin-top:5px;}
+.calc-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-bg);}
+.calc-result-box{background:var(--brand-dark);border-radius:var(--r2);padding:20px;}
+
+/* ─── STAB TABS ─── */
+.stab-nav{display:flex;gap:2px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:3px;width:fit-content;}
+.stab-btn{font-size:12px;font-weight:500;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all .12s;color:var(--text2);background:transparent;border:none;font-family:'Inter',sans-serif;}
+.stab-btn.active{background:var(--brand-dark);color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(15,46,40,.2);}
+
+/* ─── CHART ─── */
+svg.NEXO-chart{width:100%;overflow:visible;}
+
+/* ─── DIVIDER ─── */
+.div{height:1px;background:var(--border);margin:14px 0;}
+
+/* ─── UTILS ─── */
+.row{display:flex;align-items:center;justify-content:space-between;}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;}
+.col{display:flex;flex-direction:column;}
+.mono{font-family:'JetBrains Mono',monospace;}
+.fw7{font-weight:700;}
+.fw6{font-weight:600;}
+.sm{font-size:13px;}
+.xs{font-size:11px;}
+.txt-blue{color:var(--blue);}
+.txt-green{color:var(--green);}
+.txt-red{color:var(--red);}
+.txt-gold{color:var(--gold);}
+.txt-orange{color:var(--orange);}
+.txt-purple{color:var(--purple);}
+.txt2{color:var(--text2);}
+.txt3{color:var(--text3);}
+.txt-teal{color:var(--teal);}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+</style>
+</head>
+<body>
+
+<!-- ════════ LOGIN ════════ -->
+<div id="login-screen">
+
+  <!-- LEFT: Form Panel -->
+  <div class="login-left">
+    <div class="login-left-inner">
+      <div class="login-brand">
+        <div class="login-logo">
+          <div class="login-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4fd1b8" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="login-logo-text">NEX<span>O</span></div>
+        </div>
+        <div class="login-tagline">Next-gen Emission eXchange Operations<br>IoT · AI · Blockchain · Pajak Karbon Indonesia</div>
+      </div>
+
+      <div class="login-headline">Selamat Datang<br>di NEXO</div>
+      <div class="login-sub">Platform pemantauan emisi karbon nasional berbasis sensor real-time, AI, dan blockchain.</div>
+
+      <div class="login-step-label">Pilih Peran Pengguna</div>
+      <div class="role-grid">
+        <div class="role-btn" onclick="selectRole('gov')" id="role-gov"><div class="role-icon">🏛️</div><div class="role-name">Pemerintah</div><div class="role-desc">KLHK / DJP / BAPPENAS</div></div>
+        <div class="role-btn" onclick="selectRole('corp')" id="role-corp"><div class="role-icon">🏭</div><div class="role-name">Perusahaan</div><div class="role-desc">Wajib pajak karbon</div></div>
+        <div class="role-btn" onclick="selectRole('pub')" id="role-pub"><div class="role-icon">👥</div><div class="role-name">Masyarakat</div><div class="role-desc">Akses publik & CSO</div></div>
+      </div>
+
+      <div id="login-fields" style="display:none;">
+        <div class="login-step-label" style="margin-top:4px;">Verifikasi Identitas</div>
+        <div class="login-field"><label id="id-label">NIK</label><input type="text" id="inp-nik" placeholder="Masukkan NIK atau NPWP Anda"><div class="login-hint" id="id-hint">16 digit NIK atau 15 digit NPWP</div></div>
+        <div class="login-field"><label>Kata Sandi</label><input type="password" id="inp-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"><div class="login-hint">Demo: gunakan <strong>demo123</strong></div></div>
+        <button class="btn-login" onclick="doLogin()">Masuk ke Sistem NEXO →</button>
+        <div class="login-err" id="login-err">⚠ Identitas atau kata sandi tidak valid. Gunakan password: demo123</div>
+      </div>
+
+      <div class="login-proto">Prototipe · NEXO v1.0</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Info Panel -->
+  <div class="login-right">
+    <div class="lrp-circle"></div>
+    <div class="lrp-circle2"></div>
+
+    <div class="lrp-top">
+      <div class="lrp-eyebrow">Platform Karbon Indonesia</div>
+      <div class="lrp-title">Monitor Emisi<br><span>Secara Real-Time</span><br>di Seluruh Nusantara</div>
+      <div class="lrp-desc">Data sensor dikirim setiap 5 detik, divalidasi AI, dan dicatat permanen di blockchain — transparan, tidak bisa dimanipulasi.</div>
+      <div class="lrp-features">
+        <div class="lrp-feat"><div class="lrp-feat-dot"></div>IoT Sensor Layer</div>
+        <div class="lrp-feat"><div class="lrp-feat-dot"></div>AI Anomaly Detection</div>
+        <div class="lrp-feat"><div class="lrp-feat-dot"></div>Blockchain Ledger</div>
+        <div class="lrp-feat"><div class="lrp-feat-dot"></div>Pajak Karbon Otomatis</div>
+        <div class="lrp-feat"><div class="lrp-feat-dot"></div>TCT Token Carbon</div>
+      </div>
+    </div>
+
+    <div class="lrp-mid">
+      <div class="lrp-card" id="lrp-card">
+        <div class="lrp-quote-mark">"</div>
+        <div class="lrp-quote" id="lrp-quote">NEXO mengubah pelaporan emisi dari dokumen manual berbulan-bulan menjadi data verifikasi real-time yang langsung tercatat di blockchain. Ini revolusi transparansi iklim.</div>
+        <div class="lrp-author">
+          <div class="lrp-author-dot" id="lrp-emoji">🏛️</div>
+          <div>
+            <div class="lrp-author-name" id="lrp-name">Direktur Pengendalian Perubahan Iklim</div>
+            <div class="lrp-author-role" id="lrp-role">Kementerian LHK · Pengguna Pemerintah</div>
+          </div>
+        </div>
+      </div>
+      <div class="lrp-nav">
+        <div class="lrp-arr" onclick="prevQuote()">←</div>
+        <div class="lrp-arr" onclick="nextQuote()">→</div>
+        <div class="lrp-dots">
+          <div class="lrp-dot active" id="dot-0"></div>
+          <div class="lrp-dot" id="dot-1"></div>
+          <div class="lrp-dot" id="dot-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lrp-stats">
+      <div class="lrp-stat">
+        <div class="lrp-stat-val"><span>5</span>s</div>
+        <div class="lrp-stat-label">Interval Update Sensor</div>
+      </div>
+      <div class="lrp-stat">
+        <div class="lrp-stat-val"><span>6</span> Tier</div>
+        <div class="lrp-stat-label">Klasifikasi Emisi AI</div>
+      </div>
+      <div class="lrp-stat">
+        <div class="lrp-stat-val"><span>256</span> Hash</div>
+        <div class="lrp-stat-label">Blockchain</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Quote Carousel ───
+const quotes=[
+  {q:'NEXO mengubah pelaporan emisi dari dokumen manual berbulan-bulan menjadi data verifikasi real-time yang langsung tercatat di blockchain. Ini revolusi transparansi iklim.',n:'Direktur Pengendalian Perubahan Iklim',r:'Kementerian LHK · Pengguna Pemerintah',e:'🏛️'},
+  {q:'Sebagai perusahaan wajib pajak karbon, NEXO memberi kami visibilitas penuh terhadap emisi pabrik secara real-time. Kalkulator pajak otomatisnya sangat membantu perencanaan ESG kami.',n:'VP Sustainability & ESG',r:'Perusahaan Manufaktur · Tier B',e:'🏭'},
+  {q:'Dengan NEXO, masyarakat dan LSM kini bisa memantau emisi perusahaan secara transparan. Data blockchain yang tidak bisa dimanipulasi adalah kunci akuntabilitas iklim Indonesia.',n:'Direktur Riset Perubahan Iklim',r:'CSO Lingkungan Hidup · Akses Publik',e:'👥'},
+];
+let qi=0;
+function showQuote(i){
+  const c=quotes[i];
+  document.getElementById('lrp-quote').textContent=c.q;
+  document.getElementById('lrp-name').textContent=c.n;
+  document.getElementById('lrp-role').textContent=c.r;
+  document.getElementById('lrp-emoji').textContent=c.e;
+  document.querySelectorAll('.lrp-dot').forEach((d,idx)=>d.classList.toggle('active',idx===i));
+  const card=document.getElementById('lrp-card');
+  card.style.animation='none';card.offsetHeight;card.style.animation='lrpFadeIn .35s ease both';
+}
+function nextQuote(){qi=(qi+1)%quotes.length;showQuote(qi);}
+function prevQuote(){qi=(qi-1+quotes.length)%quotes.length;showQuote(qi);}
+setInterval(nextQuote,5000);
+</script>
+
+<!-- ════════ APP ════════ -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="top-brand" onclick="goPanel('dashboard')">
+      <div class="top-brand-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4fd1b8" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div>
+      <div class="top-brand-text">NEX<span>O</span></div>
+    </div>
+    <div class="top-divider"></div>
+    <span style="font-size:12px;color:var(--text2);font-weight:500;">Next-gen Emission eXchange Operations</span>
+    <div class="top-spacer"></div>
+    <div class="live-badge"><div class="live-dot"></div>LIVE &nbsp;·&nbsp; <span id="live-clock">--:--:--</span></div>
+    <div class="user-pill"><div class="user-avatar" id="user-avatar">🏛️</div><div class="user-name" id="user-name">--</div></div>
+    <button class="btn-logout" onclick="doLogout()">Keluar</button>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-section">Utama</div>
+    <button class="sb-btn active" id="sb-dashboard" onclick="goPanel('dashboard')"><span class="sb-icon">🏠</span><span class="sb-label">Dashboard</span></button>
+
+    <div class="sb-section">Fitur Sensor & Analisis</div>
+    <button class="sb-btn" id="sb-iot" onclick="goPanel('iot')"><span class="sb-icon">📡</span><span class="sb-label">IoT Sensor Layer</span><span class="sb-badge green">6 Jenis</span></button>
+    <button class="sb-btn" id="sb-ai" onclick="goPanel('ai')"><span class="sb-icon">🤖</span><span class="sb-label">AI Engine</span><span class="sb-badge gold" id="sb-ai-flag">1 flag</span></button>
+    <button class="sb-btn" id="sb-calc" onclick="goPanel('calc')"><span class="sb-icon">🧮</span><span class="sb-label">Kalkulator Pajak</span></button>
+    <button class="sb-btn" id="sb-blockchain" onclick="goPanel('blockchain')"><span class="sb-icon">⛓️</span><span class="sb-label">Blockchain Ledger</span></button>
+
+    <div class="sb-section">Data & Kebijakan</div>
+    <button class="sb-btn" id="sb-companies" onclick="goPanel('companies')"><span class="sb-icon">🏭</span><span class="sb-label">Daftar Perusahaan</span></button>
+    <button class="sb-btn" id="sb-incentive" onclick="goPanel('incentive')"><span class="sb-icon">🎯</span><span class="sb-label">Insentif & Disinsentif</span></button>
+
+    <div class="sb-section">Referensi</div>
+    <button class="sb-btn" id="sb-guide" onclick="goPanel('guide')"><span class="sb-icon">📚</span><span class="sb-label">Panduan Sistem</span></button>
+
+    <div class="sb-footer">
+      <div class="sb-footer-label">Emisi Agregat</div>
+      <div class="sb-footer-val" id="sb-emission">–</div>
+      <div class="sb-footer-unit">tCO₂e / jam · nasional</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+  <!-- ══ DASHBOARD ══ -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="page-header">
+      <div class="page-eyebrow">Dashboard Utama</div>
+      <div class="page-title">Emisi Nasional Real-Time</div>
+      <div class="page-sub">Agregasi data dari 128 sensor CEMS aktif di seluruh fasilitas industri Indonesia</div>
+    </div>
+    <div class="g4" style="margin-bottom:10px;">
+      <div class="card"><div class="card-ey">Total Emisi Nasional</div><div class="card-val txt-blue" id="d-total">2.847</div><div class="card-unit">tCO₂e / jam</div><div class="card-delta d-up" id="d-delta">▲ +3.2% vs baseline</div></div>
+      <div class="card"><div class="card-ey">Kewajiban Pajak Karbon</div><div class="card-val" id="d-tax">Rp 6,41 M</div><div class="card-unit">per jam · UU HPP No.7/2021</div><div class="card-delta d-warn">Estimasi real-time</div></div>
+      <div class="card"><div class="card-ey">Sensor Aktif</div><div class="card-val">128</div><div class="card-unit">6 jenis · 32 fasilitas</div><div class="card-delta d-ok">✓ Semua online</div></div>
+      <div class="card"><div class="card-ey">Blok Blockchain</div><div class="card-val txt-blue" id="d-blocks">9,412</div><div class="card-unit">catatan immutable</div><div class="card-delta d-blue">0 tamper detected</div></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="card span2">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div class="card-ey" style="margin-bottom:0;">Tren Emisi 24 Jam — Aktual vs. Prediksi AI vs. Batas NDC</div>
+          <div class="flow" style="gap:12px;">
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><div style="width:20px;height:2px;background:var(--blue);border-radius:2px;"></div>Aktual</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><div style="width:20px;height:2px;background:var(--text3);border-radius:2px;"></div>Prediksi AI</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);"><div style="width:20px;height:2px;background:var(--red);border-radius:2px;"></div>Batas NDC</div>
+          </div>
+        </div>
+        <svg class="NEXO-chart" id="main-chart" height="150" viewBox="0 0 900 150" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2383e2" stop-opacity=".15"/>
+              <stop offset="100%" stop-color="#2383e2" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="40" x2="900" y2="40" stroke="#e9e9e7" stroke-width="1"/>
+          <line x1="0" y1="80" x2="900" y2="80" stroke="#e9e9e7" stroke-width="1"/>
+          <line x1="0" y1="120" x2="900" y2="120" stroke="#e9e9e7" stroke-width="1"/>
+          <line x1="0" y1="52" x2="900" y2="52" stroke="#e03e3e" stroke-width="1.2" stroke-dasharray="5,4" opacity=".6"/>
+          <text x="830" y="47" font-size="9" fill="#e03e3e" opacity=".7" font-family="Inter,sans-serif">Batas NDC</text>
+          <path id="chart-area" fill="url(#ag)"/>
+          <path id="chart-line" fill="none" stroke="#2383e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="pred-line" fill="none" stroke="#b0aea9" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+          <circle id="live-pt" r="4" fill="#2383e2" stroke="#fff" stroke-width="2"/>
+        </svg>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;" id="chart-ts"></div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:10px;">Distribusi per Sektor</div>
+        <div class="prog-row"><div class="prog-label">Energi / PLTU</div><div class="prog-bar"><div class="prog-fill" style="width:68%;background:var(--blue);"></div></div><div class="prog-val">68%</div></div>
+        <div class="prog-row"><div class="prog-label">Manufaktur</div><div class="prog-bar"><div class="prog-fill" style="width:18%;background:var(--orange);"></div></div><div class="prog-val">18%</div></div>
+        <div class="prog-row"><div class="prog-label">Petrokimia</div><div class="prog-bar"><div class="prog-fill" style="width:9%;background:var(--purple);"></div></div><div class="prog-val">9%</div></div>
+        <div class="prog-row"><div class="prog-label">Lainnya</div><div class="prog-bar"><div class="prog-fill" style="width:5%;background:var(--text3);"></div></div><div class="prog-val">5%</div></div>
+      </div>
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:10px;">Status Kepatuhan MRV</div>
+        <div class="row" style="margin-bottom:7px;"><span class="sm txt2">Terverifikasi</span><span class="mono fw6 txt-green">97.4%</span></div>
+        <div class="row" style="margin-bottom:7px;"><span class="sm txt2">Dalam Investigasi</span><span class="mono fw6 txt-gold">2.1%</span></div>
+        <div class="row" style="margin-bottom:7px;"><span class="sm txt2">Pelanggaran</span><span class="mono fw6 txt-red">0.5%</span></div>
+        <div class="div"></div>
+        <div class="row"><span class="xs txt3">Diperbarui</span><span class="xs mono" id="mrv-ts">--:--:--</span></div>
+      </div>
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:10px;">Proyeksi Pajak Karbon</div>
+        <div class="row" style="margin-bottom:7px;"><span class="sm txt2">Harian</span><span class="mono fw6 txt-blue" id="d-daily-tax">–</span></div>
+        <div class="row" style="margin-bottom:7px;"><span class="sm txt2">Bulanan</span><span class="mono fw6 txt-gold" id="d-monthly-tax">–</span></div>
+        <div class="row"><span class="sm txt2">Tahunan</span><span class="mono fw6 txt-purple" id="d-annual-tax">–</span></div>
+        <div class="div"></div>
+        <div class="xs txt3">Tarif: Rp 30.000 / tCO₂e · UU HPP 2021</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ IOT ══ -->
+  <div class="panel" id="panel-iot">
+    <div class="page-header">
+      <div class="page-eyebrow">Fitur 1 · IoT Sensor Layer</div>
+      <div class="page-title">Jaringan CEMS Nasional — 6 Jenis Sensor</div>
+      <div class="page-sub">Setiap sensor mengukur emisi dari sumber yang berbeda. Nilai yang ditampilkan merupakan akumulasi nasional dari seluruh fasilitas industri terdaftar di Indonesia.</div>
+    </div>
+    <div class="info-box blue"><div class="ib-title">Arsitektur Multi-Sensor</div><p>Sensor A–F masing-masing mengukur sumber emisi yang berbeda. Data 128 unit sensor dikirim ke cloud setiap 5 detik via MQTT/5G, diproses oleh DAHS, lalu divalidasi AI sebelum dicatat di blockchain. </p></div>
+
+    <!-- 6 Sensor Cards 2x3 -->
+    <div class="g3" style="margin-bottom:10px;">
+      <div class="sensor-card"><div class="sensor-stripe" style="background:var(--blue);"></div><div class="sensor-lbl">Sensor A · 38 unit aktif</div><div class="sensor-name">Cerobong Industri (CEMS)<br><span style="font-size:10px;color:var(--text3);">Emisi pembakaran bahan bakar langsung</span></div><div class="sensor-val txt-blue" id="sa-val">1,247</div><div class="sensor-unit">tCO₂e/jam · CO₂ + SO₂ + NOx + PM₂.₅</div><div class="sensor-bar"><div class="sensor-bar-fill" id="sa-bar" style="width:74%;background:var(--blue);"></div></div><div class="sensor-status"><div class="sdot" style="background:var(--green);animation:pulse 1.5s infinite;"></div><span class="txt-green fw6">Normal — PLTU, Semen, Smelter</span></div></div>
+      <div class="sensor-card"><div class="sensor-stripe" style="background:var(--orange);"></div><div class="sensor-lbl">Sensor B · 24 unit aktif</div><div class="sensor-name">Kendaraan Operasional<br><span style="font-size:10px;color:var(--text3);">Fleet truk, forklift, alat berat perusahaan</span></div><div class="sensor-val txt-orange" id="sb-val">313</div><div class="sensor-unit">tCO₂e/jam · CO₂ + CO + HC + NOx</div><div class="sensor-bar"><div class="sensor-bar-fill" id="sb-bar" style="width:38%;background:var(--orange);"></div></div><div class="sensor-status"><div class="sdot" style="background:var(--green);animation:pulse 1.5s infinite;"></div><span class="txt-green fw6">Normal — GPS + OBD-II integrated</span></div></div>
+      <div class="sensor-card"><div class="sensor-stripe" style="background:var(--purple);"></div><div class="sensor-lbl">Sensor C · 18 unit aktif</div><div class="sensor-name">Refrigerasi &amp; HVAC<br><span style="font-size:10px;color:var(--text3);">Kebocoran refrigeran sistem pendingin industri</span></div><div class="sensor-val txt-purple" id="sc-val">87.4</div><div class="sensor-unit">tCO₂e/jam · HFCs (R-134a, R-410A)</div><div class="sensor-bar"><div class="sensor-bar-fill" id="sc-bar" style="width:52%;background:var(--purple);"></div></div><div class="sensor-status"><div class="sdot" style="background:var(--gold);animation:pulse 1s infinite;"></div><span class="txt-gold fw6">Perhatian — 2 fasilitas mendekati threshold</span></div></div>
+      <div class="sensor-card"><div class="sensor-stripe" style="background:var(--green);"></div><div class="sensor-lbl">Sensor D · 22 unit aktif</div><div class="sensor-name">Pengolahan Limbah (WWT)<br><span style="font-size:10px;color:var(--text3);">TPA, IPAL industri, lagoon limbah organik</span></div><div class="sensor-val txt-green" id="sd-val">201.6</div><div class="sensor-unit">tCO₂e/jam · CH₄ (GWP=28) + N₂O (GWP=273)</div><div class="sensor-bar"><div class="sensor-bar-fill" id="sd-bar" style="width:46%;background:var(--green);"></div></div><div class="sensor-status"><div class="sdot" style="background:var(--green);animation:pulse 1.5s infinite;"></div><span class="txt-green fw6">Normal — biogas capture aktif</span></div></div>
+      <div class="sensor-card"><div class="sensor-stripe" style="background:var(--red);"></div><div class="sensor-lbl">Sensor E · 14 unit aktif</div><div class="sensor-name">Emisi Fugitif Migas<br><span style="font-size:10px;color:var(--text3);">Kebocoran pipa, katup, flens kilang &amp; sumur gas</span></div><div class="sensor-val txt-red" id="se-val">563.9</div><div class="sensor-unit">tCO₂e/jam · CH₄ + CO₂ + VOC · Laser LDAR</div><div class="sensor-bar"><div class="sensor-bar-fill" id="se-bar" style="width:65%;background:var(--red);"></div></div><div class="sensor-status"><div class="sdot" style="background:var(--red);animation:pulse .8s infinite;"></div><span class="txt-red fw6">Waspada — 1 anomali terdeteksi AI</span></div></div>
+      <div class="sensor-card"><div class="sensor-stripe" style="background:var(--teal);"></div><div class="sensor-lbl">Sensor F · 12 unit aktif</div><div class="sensor-name">Proses Industri Kimia<br><span style="font-size:10px;color:var(--text3);">Reaksi kimia semen, baja, pupuk, petrokimia</span></div><div class="sensor-val txt-teal" id="sf-val">433.7</div><div class="sensor-unit">tCO₂e/jam · CO₂ proses + CH₄ + N₂O</div><div class="sensor-bar"><div class="sensor-bar-fill" id="sf-bar" style="width:58%;background:var(--teal);"></div></div><div class="sensor-status"><div class="sdot" style="background:var(--green);animation:pulse 1.5s infinite;"></div><span class="txt-green fw6">Normal — semen &amp; petrokimia</span></div></div>
+    </div>
+
+    <!-- Formula lengkap 6 sensor -->
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:12px;">Formula Perhitungan — Sensor A &amp; B</div>
+        <div class="formula-block">
+          <div class="formula-name">Sensor A — CEMS Cerobong Industri</div>
+          <div class="formula-eq">E_A = Q_flue × C_gas × ρ_gas × GWP / 10⁶</div>
+          <div class="formula-vars">
+            <strong>Q_flue</strong> = Laju alir flue gas dari cerobong (m³/jam) via Vortex Flow Meter<br>
+            <strong>C_gas</strong> = Konsentrasi gas dari sensor NDIR (ppm = mg/m³)<br>
+            <strong>ρ_gas</strong> = Densitas: CO₂=1,977 | SO₂=2,927 | NOx≈2,05 (kg/m³)<br>
+            <strong>GWP</strong> = CO₂: 1 | SO₂: 0 (dikonversi ke CO₂e = 0 tapi dilaporkan)<br>
+          </div>
+        </div>
+        <div class="formula-block">
+          <div class="formula-name">Sensor B — Kendaraan Operasional (OBD-II + GPS)</div>
+          <div class="formula-eq">E_B = Σⱼ [ Vⱼ × EF_BBM_j ] + Σₖ [ Dₖ × EF_km_k ]</div>
+          <div class="formula-vars">
+            <strong>Vⱼ</strong> = Konsumsi bahan bakar kendaraan j (liter/jam) dari OBD-II sensor<br>
+            <strong>EF_BBM</strong> = Faktor emisi bahan bakar: Solar=2,683 | Bensin=2,312 (kg CO₂/liter)<br>
+            <strong>Dₖ</strong> = Jarak tempuh (km/jam) dari GPS tracking kendaraan k<br>
+            <strong>EF_km</strong> = Faktor emisi berbasis jarak (kg CO₂/km) per kategori kendaraan<br>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:12px;">Formula Perhitungan — Sensor C &amp; D</div>
+        <div class="formula-block">
+          <div class="formula-name">Sensor C — Refrigerasi &amp; HVAC (HFC Leakage)</div>
+          <div class="formula-eq">E_C = Σᵣ [ Kebocoran_r (kg/thn) × GWP_r ] / 8760</div>
+          <div class="formula-vars">
+            <strong>Kebocoran_r</strong> = Laju kebocoran refrigeran r (kg/tahun) diukur sensor infrared<br>
+            <strong>GWP_r</strong> = GWP IPCC AR6: R-134a=1,430 | R-410A=2,088 | R-22=1,810<br>
+            <strong>Metode</strong>: Mass balance (pengisian ulang − decommissioning) + LDAR infrared<br>
+            <strong>Dibagi 8760</strong> untuk mendapat satuan tCO₂e per jam<br>
+          </div>
+        </div>
+        <div class="formula-block">
+          <div class="formula-name">Sensor D — Pengolahan Limbah (WWT &amp; TPA)</div>
+          <div class="formula-eq">E_D = [Q_CH4 × ρ_CH4 × GWP_CH4 + Q_N2O × ρ_N2O × GWP_N2O] / 10⁶</div>
+          <div class="formula-vars">
+            <strong>Q_CH4</strong> = Laju alir gas CH₄ dari bioreaktor/TPA (m³/jam) via sensor elektrokimia<br>
+            <strong>Q_N2O</strong> = Laju alir gas N₂O dari proses nitrifikasi/denitrifikasi (m³/jam)<br>
+            <strong>ρ_CH4</strong> = 0,717 kg/m³ · <strong>GWP_CH4</strong> = 28 (AR6 100 tahun)<br>
+            <strong>ρ_N2O</strong> = 1,978 kg/m³ · <strong>GWP_N2O</strong> = 273 (AR6 100 tahun)<br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:12px;">Formula Perhitungan — Sensor E</div>
+        <div class="formula-block">
+          <div class="formula-name">Sensor E — Emisi Fugitif Migas (Laser LDAR)</div>
+          <div class="formula-eq">E_E = Σ_komponen [ Q_bocor_i × ρ_CH4 × GWP_CH4 ] / 10⁶</div>
+          <div class="formula-vars">
+            <strong>Q_bocor_i</strong> = Laju kebocoran komponen ke-i (m³/jam) terdeteksi sensor Laser Absorption Spectrometry (TDLAS/OA-ICOS)<br>
+            <strong>Komponen</strong>: pipa, katup, flens, kompresor, tangki penyimpanan<br>
+            <strong>ρ_CH4</strong> = 0,717 kg/m³ · <strong>GWP_CH4</strong> = 28 (IPCC AR6)<br>
+            <strong>Threshold deteksi</strong>: ≥10 ppm·m (OGI infrared camera)<br>
+            <strong>Metode alternatif</strong>: E_E = Σ [ EF_komponen × Jam_operasi × N_komponen ] (EPA AP-42)<br>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:12px;">Formula Perhitungan — Sensor F</div>
+        <div class="formula-block">
+          <div class="formula-name">Sensor F — Proses Industri Kimia (Kalsinasi &amp; Reduksi)</div>
+          <div class="formula-eq">E_F = Σ_proses [ M_produk_p × EF_proses_p ]</div>
+          <div class="formula-vars">
+            <strong>M_produk_p</strong> = Massa produk yang dihasilkan proses p (ton/jam) dari sensor berat/flow produksi<br>
+            <strong>EF_proses (ton CO₂/ton produk)</strong>:<br>
+            &nbsp;· Semen (kalsinasi CaCO₃): <strong>0,507</strong> tCO₂/ton klinker<br>
+            &nbsp;· Baja DRI (reduksi bijih Fe): <strong>1,850</strong> tCO₂/ton baja<br>
+            &nbsp;· Pupuk Urea (sintesis NH₃): <strong>0,733</strong> tCO₂/ton urea<br>
+            &nbsp;· Petrokimia Etilena: <strong>1,100</strong> tCO₂/ton produk<br>
+            <strong>Reaksi kimia utama semen</strong>: CaCO₃ → CaO + CO₂ (M_CO2 = 44 g/mol per mol CaCO₃ = 100 g/mol)<br>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Akumulasi nasional + raw feed -->
+    <div class="g2">
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:10px;">Akumulasi Nasional Real-Time</div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--border);"><span class="sm txt2">Sensor A (Cerobong)</span><span class="mono fw6 txt-blue" id="acc-a">1,247 tCO₂e/h</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--border);"><span class="sm txt2">Sensor B (Kendaraan)</span><span class="mono fw6 txt-orange" id="acc-b">313 tCO₂e/h</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--border);"><span class="sm txt2">Sensor C (Refrigerasi)</span><span class="mono fw6 txt-purple" id="acc-c">87 tCO₂e/h</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--border);"><span class="sm txt2">Sensor D (Limbah)</span><span class="mono fw6 txt-green" id="acc-d">202 tCO₂e/h</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--border);"><span class="sm txt2">Sensor E (Fugitif)</span><span class="mono fw6 txt-red" id="acc-e">564 tCO₂e/h</span></div>
+        <div class="row" style="padding:8px 0;border-bottom:1px solid var(--border);"><span class="sm txt2">Sensor F (Proses)</span><span class="mono fw6 txt-teal" id="acc-f">434 tCO₂e/h</span></div>
+        <div class="div"></div>
+        <div class="row"><span class="fw7">Total Agregat</span><span class="mono fw7 txt-blue" style="font-size:16px;" id="acc-total">2.847 tCO₂e/h</span></div>
+      </div>
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:10px;">Raw Stream — IoT Data Masuk</div>
+        <div style="overflow-x:auto;">
+          <table class="NEXO-table" style="font-size:11px;">
+            <thead><tr><th>Waktu</th><th>Sensor</th><th style="color:var(--blue);">CO₂</th><th style="color:var(--orange);">CH₄</th><th style="color:var(--purple);">HFC</th><th style="color:var(--blue);">tCO₂e</th><th>Status</th></tr></thead>
+            <tbody id="iot-feed"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AI ══ -->
+  <div class="panel" id="panel-ai">
+    <div class="page-header">
+      <div class="page-eyebrow">Fitur 2 · AI Engine</div>
+      <div class="page-title">Machine Learning — Anomaly Detection</div>
+      <div class="page-sub">Model LSTM dan Random Forest berjalan paralel untuk mendeteksi under-reporting, memprediksi tren emisi, dan mem-flag anomali ke regulator secara otomatis.</div>
+    </div>
+    <div class="g4" style="margin-bottom:10px;">
+      <div class="card"><div class="card-ey">Akurasi Model</div><div class="card-val txt-green">98.3%</div><div class="card-unit">LSTM · Window 168 jam</div></div>
+      <div class="card"><div class="card-ey">Anomali Hari Ini</div><div class="card-val txt-gold">3</div><div class="card-unit">1 high-risk · 2 watch</div></div>
+      <div class="card"><div class="card-ey">False Positive Rate</div><div class="card-val txt-blue">1.7%</div><div class="card-unit">MAE: ±0.043 tCO₂e</div></div>
+      <div class="card"><div class="card-ey">Perusahaan Diflag</div><div class="card-val txt-red" id="ai-flag-cnt">1</div><div class="card-unit">Laporan dikirim KLHK</div></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="card"><div class="card-ey" style="margin-bottom:12px;">Anomaly Score per Sensor (Z-Score LSTM)</div><div id="anomaly-rows"></div></div>
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:10px;">Prediksi Emisi 12 Jam (LSTM)</div>
+        <svg height="150" viewBox="0 0 420 150" style="width:100%;" preserveAspectRatio="none">
+          <line x1="0" y1="38" x2="420" y2="38" stroke="#e9e9e7" stroke-width="1"/>
+          <line x1="0" y1="80" x2="420" y2="80" stroke="#e9e9e7" stroke-width="1"/>
+          <line x1="0" y1="120" x2="420" y2="120" stroke="#e9e9e7" stroke-width="1"/>
+          <line x1="0" y1="55" x2="420" y2="55" stroke="#e03e3e" stroke-width="1.2" stroke-dasharray="4,3" opacity=".6"/>
+          <text x="340" y="50" font-size="9" fill="#e03e3e" opacity=".7" font-family="Inter,sans-serif">Batas NDC</text>
+          <path d="M0 95 Q55 88 105 92 Q160 95 210 90" fill="none" stroke="#2383e2" stroke-width="2" stroke-linecap="round"/>
+          <path d="M210 90 Q270 85 320 88 Q370 90 420 86" fill="none" stroke="#b0aea9" stroke-width="1.8" stroke-dasharray="5,3" stroke-linecap="round"/>
+          <line x1="210" y1="15" x2="210" y2="140" stroke="#e9e9e7" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="215" y="24" font-size="8.5" fill="#b0aea9" font-family="Inter,sans-serif">Sekarang</text>
+          <circle cx="210" cy="90" r="4" fill="#2383e2" stroke="#fff" stroke-width="2"/>
+          <text x="5" y="145" font-size="9" fill="#b0aea9" font-family="Inter,sans-serif">-12j</text>
+          <text x="200" y="145" font-size="9" fill="#b0aea9" font-family="Inter,sans-serif">Kini</text>
+          <text x="405" y="145" font-size="9" fill="#b0aea9" font-family="Inter,sans-serif">+12j</text>
+        </svg>
+        <div class="div"></div>
+        <div class="g2" style="gap:8px;"><div><div class="xs txt3">Prediksi Peak (+4j)</div><div class="mono fw6 txt-orange">3.12 tCO₂e/h</div></div><div><div class="xs txt3">Confidence</div><div class="mono fw6 txt-green">94.7%</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-ey" style="margin-bottom:12px;">Deteksi Under-Reporting — Laporan Manual vs. Sensor NEXO</div>
+      <table class="NEXO-table"><thead><tr><th>Fasilitas</th><th>Laporan Manual</th><th style="color:var(--blue);">Sensor NEXO</th><th>Deviasi</th><th>Anomaly Score</th><th>Tindakan</th></tr></thead><tbody id="underreport-table"></tbody></table>
+      <div style="margin-top:8px;" class="xs txt3">Threshold: Score ≥2.0 → Investigasi · Score ≥3.5 → Alert Regulator otomatis </div>
+    </div>
+  </div>
+
+  <!-- ══ KALKULATOR ══ -->
+  <div class="panel" id="panel-calc">
+    <div class="page-header">
+      <div class="page-eyebrow">Fitur 3 · Kalkulator Pajak Karbon</div>
+      <div class="page-title">Simulasi Kewajiban Fiskal Berbasis Emisi</div>
+      <div class="page-sub">Hitung kewajiban pajak karbon secara real-time dari data sensor NEXO. Mendukung perencanaan keuangan perusahaan dan proyeksi penerimaan negara.</div>
+    </div>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:14px;">Input Parameter</div>
+        <div style="margin-bottom:12px;"><label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;">Total Emisi (tCO₂e / jam)</label><input class="calc-input" type="number" id="ci-emission" value="2.847" step="0.001" oninput="runCalc()"></div>
+        <div style="margin-bottom:12px;"><label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;">Tarif Pajak Karbon (Rp / tCO₂e)</label><input class="calc-input" type="number" id="ci-rate" value="30000" step="1000" oninput="runCalc()"><div class="xs txt3" style="margin-top:3px;">UU HPP No.7/2021 · Default Rp 30.000</div></div>
+        <div style="margin-bottom:12px;"><label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;">Periode (jam)</label><input class="calc-input" type="number" id="ci-period" value="8760" step="1" oninput="runCalc()"><div class="xs txt3" style="margin-top:3px;">8.760 = 1 tahun penuh</div></div>
+        <div style="margin-bottom:12px;"><label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;">Faktor Reduksi NDC (%)</label><input class="calc-input" type="number" id="ci-reduction" value="31.89" step="0.01" oninput="runCalc()"><div class="xs txt3" style="margin-top:3px;">Target Enhanced-NDC Indonesia 2030</div></div>
+      </div>
+      <div class="col" style="gap:10px;">
+        <div class="calc-result-box">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px;">Kewajiban Pajak Total</div>
+          <div class="mono fw7" style="font-size:34px;color:#fff;letter-spacing:-.03em;" id="cr-total">–</div>
+          <div class="xs" style="color:rgba(255,255,255,.4);margin-top:4px;" id="cr-formula">–</div>
+        </div>
+        <div class="card filled" style="gap:8px;display:flex;flex-direction:column;">
+          <div class="row"><span class="sm txt2">Per Jam</span><span class="mono fw6 txt-blue" id="cr-hourly">–</span></div>
+          <div class="row"><span class="sm txt2">Per Hari</span><span class="mono fw6" id="cr-daily">–</span></div>
+          <div class="row"><span class="sm txt2">Per Bulan</span><span class="mono fw6 txt-gold" id="cr-monthly">–</span></div>
+          <div class="row"><span class="sm txt2">Per Tahun</span><span class="mono fw6 txt-purple" id="cr-annual">–</span></div>
+          <div class="div"></div>
+          <div class="row"><span class="sm txt2">Target Emisi setelah NDC</span><span class="mono fw6 txt-green" id="cr-target">–</span></div>
+          <div class="row"><span class="sm txt2">Pajak setelah reduksi</span><span class="mono fw6 txt-green" id="cr-after">–</span></div>
+          <div class="row"><span class="sm txt2">Penghematan pajak</span><span class="mono fw6 txt-blue" id="cr-save">–</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-ey" style="margin-bottom:12px;">Perbandingan Tarif Pajak Karbon Internasional</div>
+      <table class="NEXO-table"><thead><tr><th>Negara</th><th>Tarif (USD/tCO₂e)</th><th>Setara IDR</th><th>Mekanisme</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="fw6">Swedia</td><td class="mono txt-green">$130</td><td class="mono">Rp 2,08 Jt</td><td>Carbon Tax</td><td><span class="tag green">Tertinggi global</span></td></tr>
+        <tr><td class="fw6">Swiss</td><td class="mono">$130</td><td class="mono">Rp 2,08 Jt</td><td>ETS + Tax</td><td><span class="tag green">Aktif</span></td></tr>
+        <tr><td class="fw6">Uni Eropa</td><td class="mono txt-blue">~$65</td><td class="mono">Rp 1,04 Jt</td><td>EU ETS + CBAM</td><td><span class="tag blue">CBAM berlaku</span></td></tr>
+        <tr><td class="fw6">Singapura</td><td class="mono">$25</td><td class="mono">Rp 400 Rb</td><td>Carbon Tax</td><td><span class="tag blue">Aktif</span></td></tr>
+        <tr><td class="fw6">Tiongkok</td><td class="mono">~$8</td><td class="mono">Rp 128 Rb</td><td>ETS Nasional</td><td><span class="tag gold">Berkembang</span></td></tr>
+        <tr><td class="fw6 txt-blue">Indonesia</td><td class="mono txt-blue">~$2</td><td class="mono txt-blue">Rp 30.000</td><td>UU HPP + IDXCarbon</td><td><span class="tag blue">Implementasi</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <!-- ══ BLOCKCHAIN ══ -->
+  <div class="panel" id="panel-blockchain">
+    <div class="page-header">
+      <div class="page-eyebrow">Fitur 4 · Blockchain Ledger</div>
+      <div class="page-title">Immutable Carbon Record — Anti-Manipulasi</div>
+      <div class="page-sub">Setiap pengukuran sensor yang tervalidasi AI langsung di-hash SHA-256 dan disimpan dalam distributed ledger. Tidak dapat diubah oleh siapapun termasuk administrator.</div>
+    </div>
+    <div class="info-box blue"><div class="ib-title">Blockchain</div><p>Data sensor di-hash sebelum melewati server sehingga setiap perubahan satu byte nilai emisi menghasilkan hash yang berbeda (avalanche effect).</p></div>
+    <div class="g4" style="margin-bottom:10px;">
+      <div class="card"><div class="card-ey">Total Blok</div><div class="card-val txt-blue" id="bc-total">9,412</div><div class="card-unit">tersimpan di ledger</div></div>
+      <div class="card"><div class="card-ey">Integritas Data</div><div class="card-val txt-green">100%</div><div class="card-unit">0 hash mismatch</div></div>
+      <div class="card"><div class="card-ey">Tamper Attempts</div><div class="card-val txt-red">2</div><div class="card-unit">Diblokir otomatis</div></div>
+      <div class="card"><div class="card-ey">Consensus Nodes</div><div class="card-val txt-blue">7</div><div class="card-unit">KLHK · DJP · BAPPENAS +4</div></div>
+    </div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="card-ey" style="margin-bottom:14px;">Anatomi Blok NEXO — Semua Field yang Dicatat per Blok</div>
+      <div class="g3" style="gap:8px;">
+        <div class="card filled"><div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;">Header Blok</div><div class="xs txt2" style="font-family:'JetBrains Mono',monospace;line-height:2.1;">block_number: #9412<br>timestamp_ns: 174816720...<br>prev_hash: 3f8a2d...c4e1<br>merkle_root: a7b9f1...2d38<br>nonce: 48271<br>validator: KLHK-NODE-01</div></div>
+        <div class="card filled"><div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;">Data Emisi Transaksi</div><div class="xs txt2" style="font-family:'JetBrains Mono',monospace;line-height:2.1;">facility_id: "PLTU-JAWA1"<br>npwp: "01.234.567.8-XXX"<br>sensor_type: "CEMS-A"<br>CO2_ppm: 412.7<br>CH4_ppm: 18.3<br>flow_m3h: 14820<br>tCO2e_hr: 2.847<br>scope: "Scope-1"</div></div>
+        <div class="card filled"><div style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;">Metadata Validasi</div><div class="xs txt2" style="font-family:'JetBrains Mono',monospace;line-height:2.1;">ai_score: 0.42<br>ai_flag: "NORMAL"<br>ai_confidence: 0.942<br>tax_liability_idr: 85410<br>srn_ref: "SRN-2025-9412"<br>digital_sig: "3045...FF8"<br>hash_algo: "SHA-256"<br>consensus: "PoA-7/7"</div></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-ey" style="margin-bottom:12px;">Live Blockchain Feed — Blok Terbaru</div><div id="bc-feed"></div></div>
+  </div>
+
+  <!-- ══ COMPANIES ══ -->
+  <div class="panel" id="panel-companies">
+    <div class="page-header">
+      <div class="page-eyebrow">Fitur 5 · Daftar Perusahaan Nasional</div>
+      <div class="page-title">Klasifikasi Emisi Seluruh Fasilitas Terdaftar</div>
+      <div class="page-sub">Peringkat emisi karbon seluruh perusahaan industri yang terdaftar di NEXO, beserta nilai pajak karbon dan klasifikasi kinerja lingkungan (Tier S hingga Tier E).</div>
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-ey" style="margin-bottom:10px;">Sistem Klasifikasi Kinerja Emisi</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:110px;background:var(--surface);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--border);"><div class="tag tier-s" style="display:inline-block;margin-bottom:6px;">Tier S ⭐</div><div class="xs txt2">Net-Zero / Carbon Negative · &lt;0 tCO₂e/thn</div></div>
+        <div style="flex:1;min-width:110px;background:var(--green-bg);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--green-bd);"><div class="tag tier-a" style="display:inline-block;margin-bottom:6px;">Tier A ✓</div><div class="xs txt2">Sangat Rendah · 1–500 tCO₂e/thn</div></div>
+        <div style="flex:1;min-width:110px;background:var(--blue-bg);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--blue-bd);"><div class="tag tier-b" style="display:inline-block;margin-bottom:6px;">Tier B</div><div class="xs txt2">Rendah · 501–5.000 tCO₂e/thn</div></div>
+        <div style="flex:1;min-width:110px;background:var(--gold-bg);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--gold-bd);"><div class="tag tier-c" style="display:inline-block;margin-bottom:6px;">Tier C !</div><div class="xs txt2">Sedang · 5.001–50.000 tCO₂e/thn</div></div>
+        <div style="flex:1;min-width:110px;background:var(--orange-bg);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--orange-bd);"><div class="tag tier-d" style="display:inline-block;margin-bottom:6px;">Tier D ⚠</div><div class="xs txt2">Tinggi · 50.001–200.000 tCO₂e/thn</div></div>
+        <div style="flex:1;min-width:110px;background:var(--red-bg);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--red-bd);"><div class="tag tier-e" style="display:inline-block;margin-bottom:6px;">Tier E ✗</div><div class="xs txt2">Kritis · &gt;200.000 tCO₂e/thn</div></div>
+      </div>
+    </div>
+    <div class="card"><div class="row" style="margin-bottom:10px;"><div class="card-ey" style="margin-bottom:0;">Daftar Perusahaan Terregistrasi NEXO</div><div class="flow"><span class="tag green">12 Tier S/A/B</span><span class="tag gold">8 Tier C/D</span><span class="tag red">2 Tier E</span></div></div><div style="overflow-x:auto;"><table class="NEXO-table" id="companies-table"><thead><tr><th>#</th><th>Perusahaan</th><th>Sektor</th><th style="color:var(--blue);">Emisi (tCO₂e/thn)</th><th style="color:var(--gold);">Pajak Karbon/thn</th><th>Tier</th><th>Tren</th><th>Flag</th></tr></thead><tbody id="companies-tbody"></tbody></table></div></div>
+  </div>
+
+  <!-- ══ INCENTIVE ══ -->
+  <div class="panel" id="panel-incentive">
+    <div class="page-header">
+      <div class="page-eyebrow">Fitur 6 · Insentif &amp; Disinsentif</div>
+      <div class="page-title">Mekanisme Reward &amp; Penalty Emisi Karbon</div>
+      <div class="page-sub">Sistem NEXO terhubung langsung dengan mekanisme insentif fiskal dan non-fiskal berbasis data real-time. Perusahaan dengan kinerja baik mendapat reward otomatis; perusahaan dengan emisi tinggi dikenai sanksi progresif.</div>
+    </div>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="inc-card positive"><div class="inc-title">✅ Mekanisme Insentif</div><div class="xs txt2">Untuk Tier S, A, dan B yang memenuhi kriteria</div><ul class="inc-list">
+        <li><span style="font-size:16px;">💰</span><div><strong>Tax Credit Pajak Karbon</strong><br>Tier S: 0% pajak + bonus kredit karbon dijual di IDXCarbon. Tier A: -50% pajak karbon tahunan otomatis dari sistem NEXO.</div></li>
+        <li><span style="font-size:16px;">🏆</span><div><strong>Sertifikat Hijau &amp; SPE-GRK</strong><br>Sertifikat Pengurangan Emisi (SPE-GRK) diterbitkan otomatis dari data blockchain NEXO, meningkatkan rating ESG untuk akses pembiayaan hijau.</div></li>
+        <li><span style="font-size:16px;">🏦</span><div><strong>Green Bond &amp; Pembiayaan Lunak</strong><br>Akses prioritas green bond rate (bunga 1–2% lebih rendah) dari bank-bank terdaftar POJK 51/2017.</div></li>
+        <li><span style="font-size:16px;">🛒</span><div><strong>Preferensi Pengadaan Pemerintah</strong><br>Perusahaan Tier A/S diprioritaskan dalam pengadaan barang/jasa pemerintah (Perpres No.16/2018).</div></li>
+        <li><span style="font-size:16px;">📊</span><div><strong>Penjualan Kredit Karbon</strong><br>Surplus kredit karbon dari emisi di bawah kuota NDC dapat dijual di IDXCarbon. Harga referensi: Rp 60.000–80.000/tCO₂e (2025).</div></li>
+      </ul></div>
+      <div class="inc-card negative"><div class="inc-title">❌ Mekanisme Disinsentif</div><div class="xs txt2">Untuk Tier C, D, dan E yang melebihi kuota</div><ul class="inc-list">
+        <li><span style="font-size:16px;">📈</span><div><strong>Pajak Progresif (Carbon Surcharge)</strong><br>Tier C: 1.5× tarif. Tier D: 2.5× tarif. Tier E: 4× tarif + denda administrasi. Dihitung otomatis via data NEXO.</div></li>
+        <li><span style="font-size:16px;">📢</span><div><strong>Public Disclosure (Name &amp; Shame)</strong><br>Data emisi Tier D/E dipublikasikan otomatis di portal NEXO publik, dapat diakses siapapun termasuk media dan investor.</div></li>
+        <li><span style="font-size:16px;">🚫</span><div><strong>Pembatasan Ekspansi &amp; Izin</strong><br>Perusahaan Tier E dikenai moratorium izin ekspansi kapasitas produksi hingga emisi kembali ke Tier C atau lebih baik.</div></li>
+        <li><span style="font-size:16px;">⚖️</span><div><strong>Sanksi Administratif &amp; Pidana</strong><br>Under-reporting terdeteksi AI: denda Rp 10–100 Jt (PP 71/2011). Manipulasi data blockchain: pidana UU ITE.</div></li>
+        <li><span style="font-size:16px;">💳</span><div><strong>Pemblokiran Pasar Karbon</strong><br>Perusahaan yang diflag under-reporting diblokir dari transaksi IDXCarbon hingga audit independen selesai (SRN freeze).</div></li>
+      </ul></div>
+    </div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="card-ey" style="margin-bottom:12px;">Tabel Pajak Progresif Per Tier</div>
+      <table class="NEXO-table"><thead><tr><th>Tier</th><th>Range Emisi (tCO₂e/thn)</th><th>Multiplier</th><th>Tarif Efektif</th><th>Pajak (contoh 10.000 tCO₂e)</th><th>Aksi Otomatis NEXO</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tier-s">Tier S</span></td><td class="mono">&lt;0</td><td class="mono txt-green">0×</td><td class="mono txt-green">Rp 0</td><td class="mono txt-green">Rp 0 + kredit dijual</td><td><span class="tag green">SPE-GRK issued</span></td></tr>
+        <tr><td><span class="tag tier-a">Tier A</span></td><td class="mono">1 – 500</td><td class="mono txt-green">0.5×</td><td class="mono txt-green">Rp 15.000</td><td class="mono txt-green">Rp 75 Jt</td><td><span class="tag green">Insentif aktif</span></td></tr>
+        <tr><td><span class="tag tier-b">Tier B</span></td><td class="mono">501 – 5.000</td><td class="mono txt-blue">1.0×</td><td class="mono txt-blue">Rp 30.000</td><td class="mono txt-blue">Rp 150 Jt</td><td><span class="tag blue">Normal</span></td></tr>
+        <tr><td><span class="tag tier-c">Tier C</span></td><td class="mono">5.001 – 50.000</td><td class="mono txt-gold">1.5×</td><td class="mono txt-gold">Rp 45.000</td><td class="mono txt-gold">Rp 225 Jt</td><td><span class="tag gold">Watch list</span></td></tr>
+        <tr><td><span class="tag tier-d">Tier D</span></td><td class="mono">50.001 – 200.000</td><td class="mono txt-orange">2.5×</td><td class="mono txt-orange">Rp 75.000</td><td class="mono txt-orange">Rp 375 Jt</td><td><span class="tag orange">Disclosure publik</span></td></tr>
+        <tr><td><span class="tag tier-e">Tier E</span></td><td class="mono">&gt;200.000</td><td class="mono txt-red">4.0×</td><td class="mono txt-red">Rp 120.000</td><td class="mono txt-red">Rp 600 Jt</td><td><span class="tag red">Moratorium + audit paksa</span></td></tr>
+      </tbody></table>
+    </div>
+    <div class="card">
+      <div class="card-ey" style="margin-bottom:12px;">Simulator Insentif / Disinsentif</div>
+      <div class="g2">
+        <div>
+          <div style="margin-bottom:10px;"><label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;">Emisi Tahunan (tCO₂e)</label><input class="calc-input" type="number" id="sim-emission" value="75000" oninput="runSim()"></div>
+          <div><label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;">Tarif Dasar (Rp/tCO₂e)</label><input class="calc-input" type="number" id="sim-rate" value="30000" oninput="runSim()"></div>
+        </div>
+        <div class="card filled">
+          <div style="margin-bottom:8px;"><span class="xs txt3">Klasifikasi Tier</span><br><span id="sim-tier" class="mono fw7" style="font-size:20px;letter-spacing:-.02em;">–</span></div>
+          <div class="div"></div>
+          <div class="row" style="margin-bottom:6px;"><span class="sm txt2">Multiplier</span><span class="mono fw6" id="sim-mult">–</span></div>
+          <div class="row" style="margin-bottom:6px;"><span class="sm txt2">Pajak Efektif/thn</span><span class="mono fw6" id="sim-pajak">–</span></div>
+          <div class="row"><span class="sm txt2">Aksi Sistem</span><span id="sim-action">–</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PSTC SECTION ══ -->
+    <div class="card" style="margin-top:10px;border:1.5px solid var(--blue-bd);background:linear-gradient(135deg,var(--blue-bg),#fff);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="width:38px;height:38px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">⚡</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--blue);letter-spacing:-.01em;">Predictive Smart-Contract Tax-Credit System (PSTC)</div>
+          <div class="xs txt2">Token Kredit Karbon yang cair, real-time, dan dapat diperdagangkan secara langsung</div>
+        </div>
+        <span class="tag blue" style="margin-left:auto;font-size:11px;font-weight:700;">Novelty</span>
+      </div>
+
+      <div class="g2" style="margin-bottom:12px;gap:10px;">
+        <!-- Smart Contract Flow -->
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;">
+          <div class="card-ey" style="margin-bottom:10px;color:var(--blue);">Cara Kerja Smart Contract</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:8px;background:var(--surface);border-radius:6px;">
+              <div style="width:22px;height:22px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">1</div>
+              <div class="xs txt2"><strong style="color:var(--text);">Monitor Kuota Harian</strong><br>Smart contract membaca emisi aktual dari blockchain NEXO setiap jam vs. kuota NDC harian perusahaan (cap).</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:8px;background:var(--surface);border-radius:6px;">
+              <div style="width:22px;height:22px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">2</div>
+              <div class="xs txt2"><strong style="color:var(--text);">Hitung Surplus Emisi</strong><br>Jika emisi_aktual &lt; kuota_NDC, smart contract otomatis menghitung surplus: <span class="mono" style="color:var(--green);">Surplus = Kuota − Emisi_aktual</span></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:8px;background:var(--surface);border-radius:6px;">
+              <div style="width:22px;height:22px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">3</div>
+              <div class="xs txt2"><strong style="color:var(--text);">Mint NEXO-TCT Token</strong><br>Smart contract menerbitkan token ERC-20 "NEXO-TCT" (Tokenized Carbon Tax-Credit). 1 token = 1 tCO₂e surplus. Didukung hash blockchain sebagai proof.</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:8px;padding:8px;background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:6px;">
+              <div style="width:22px;height:22px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;">4</div>
+              <div class="xs txt2"><strong style="color:var(--text);">3 Pilihan Likuidasi Instan</strong><br>Perusahaan dapat: <strong>(a)</strong> Jual hari itu juga di IDXCarbon, <strong>(b)</strong> Jadikan agunan digital (collateral) kredit hijau bank, <strong>(c)</strong> Simpan untuk compliance tahun depan.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Token Live Monitor -->
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:14px;">
+          <div class="card-ey" style="margin-bottom:10px;color:var(--blue);">Monitor Token NEXO-TCT (Live)</div>
+          <div style="background:var(--text);border-radius:8px;padding:14px;margin-bottom:10px;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;">Token Diterbitkan Hari Ini</div>
+            <div class="mono fw7" style="font-size:28px;color:#fff;" id="pstc-minted">0</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.4);">NEXO-TCT · 1 token = 1 tCO₂e surplus</div>
+          </div>
+          <div class="row" style="margin-bottom:7px;"><span class="xs txt2">Harga IDXCarbon (referensi)</span><span class="mono fw6 txt-blue" id="pstc-price">Rp 70.000/token</span></div>
+          <div class="row" style="margin-bottom:7px;"><span class="xs txt2">Nilai likuid hari ini</span><span class="mono fw6 txt-green" id="pstc-value">–</span></div>
+          <div class="row" style="margin-bottom:7px;"><span class="xs txt2">Token beredar (kumulatif)</span><span class="mono fw6" style="color:var(--purple);" id="pstc-total">–</span></div>
+          <div class="row" style="margin-bottom:7px;"><span class="xs txt2">Volume perdagangan ACX*</span><span class="mono fw6 txt-gold">$21,2 Jt (2021–22)</span></div>
+          <div class="row"><span class="xs txt2">Status Smart Contract</span><span class="tag green xs" id="pstc-status">✓ Aktif</span></div>
+          <div class="div"></div>
+        </div>
+      </div>
+
+      <!-- PSTC vs Old System comparison -->
+      <div style="background:var(--surface);border-radius:var(--r);padding:12px;">
+        <div class="card-ey" style="margin-bottom:8px;">Transformasi: Dari Denda ke Instrumen Manajemen Aset</div>
+        <div class="g2" style="gap:8px;">
+          <div style="padding:10px;background:var(--red-bg);border:1px solid var(--red-bd);border-radius:6px;">
+            <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;">❌ Sistem Lama</div>
+            <div class="xs txt2" style="line-height:1.7;">Pajak karbon = "hukuman" yang baru diketahui akhir tahun → tidak ada motivasi intrahari → CFO tidak bisa mengelola posisi karbon secara dinamis</div>
+          </div>
+          <div style="padding:10px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:6px;">
+            <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:6px;">✅ Sistem Baru = PSTC dan NEXO</div>
+            <div class="xs txt2" style="line-height:1.7;">Surplus emisi = aset cair yang dapat dimonetisasi hari itu juga → mendorong reduksi emisi intrahari → token dijual / agunan kredit hijau bunga ultra-rendah</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANDUAN ══ -->
+  <div class="panel" id="panel-guide">
+    <div class="page-header">
+      <div class="page-eyebrow">Panduan Sistem</div>
+      <div class="page-title">Dokumentasi Metodologi &amp; Referensi NEXO</div>
+      <div class="page-sub">Panduan lengkap formula dan arsitektur teknis Next-gen Emission eXchange Operations.</div>
+    </div>
+    <div class="stab-nav">
+      <button class="stab-btn active" onclick="guideTab('formula')">📐 Formula</button>
+      <button class="stab-btn" onclick="guideTab('arch')">🏗️ Arsitektur</button>
+      <button class="stab-btn" onclick="guideTab('faq')">❓ FAQ</button>
+    </div>
+    <div id="guide-formula">
+      <div class="formula-block"><div class="formula-name">F-1 · Emisi Total (Carbon Metering)</div><div class="formula-eq">E_total = Σᵢ [ Qᵢ × Cᵢ × ρᵢ × GWPᵢ ] / 10⁶</div><div class="formula-vars"><strong>Qᵢ</strong> = Laju alir (m³/jam) · <strong>Cᵢ</strong> = Konsentrasi gas (ppm) · <strong>ρᵢ</strong> = Densitas: CO₂=1.977, CH₄=0.717, N₂O=1.978 · <strong>GWPᵢ</strong> IPCC AR6: CO₂=1, CH₄=28, N₂O=273, HFC-134a=1430<br></div></div>
+      <div class="formula-block"><div class="formula-name">F-2 · Anomaly Score AI (LSTM Z-Score)</div><div class="formula-eq">Score = |E_actual − E_lstm| / σ_baseline_90d</div><div class="formula-vars"><strong>E_lstm</strong> = Prediksi dari LSTM 3-layer, window 168 jam · <strong>σ_baseline_90d</strong> = Std. deviasi historis 90 hari · Flag ≥2.0 → Investigasi · Flag ≥3.5 → Alert Regulator<br></div></div>
+      <div class="formula-block"><div class="formula-name">F-3 · Blockchain Hash (SHA-256)</div><div class="formula-eq">H_n = SHA256( H_{n-1} ‖ ts_ns ‖ npwp ‖ sensor_id ‖ E_value ‖ ai_score )</div><div class="formula-vars"><strong>H_{n-1}</strong> = Hash blok sebelumnya (immutability chain) · <strong>ts_ns</strong> = Unix nanosecond timestamp · Perubahan 1 byte → hash berbeda total (avalanche effect)<br></div></div>
+      <div class="formula-block"><div class="formula-name">F-4 · Pajak Karbon Progresif</div><div class="formula-eq">Tax = E_annual × Rate_base × Multiplier_tier</div><div class="formula-vars"><strong>Rate_base</strong> = Rp 30.000/tCO₂e (UU HPP No.7/2021 Pasal 13) · Multiplier: S=0, A=0.5, B=1.0, C=1.5, D=2.5, E=4.0<br></div></div>
+    </div>
+    <div id="guide-arch" style="display:none;">
+      <div class="card">
+        <div class="card-ey" style="margin-bottom:12px;">Stack Teknologi NEXO — 3 Layer</div>
+        <div class="g3" style="gap:8px;">
+          <div class="card filled"><div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;">Layer 1 · IoT Sensor</div><div class="xs txt2" style="line-height:2;">NDIR CO₂ Analyzer<br>Laser TDLAS CH₄/N₂O<br>Infrared HFC Detector<br>OBD-II Vehicle Scanner<br>Vortex Flow Meter<br>OGI Camera (fugitive)<br>Protokol: MODBUS · MQTT · 5G/LPWAN</div></div>
+          <div class="card filled"><div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:8px;">Layer 2 · AI/Cloud</div><div class="xs txt2" style="line-height:2;">DAHS Data Acquisition<br>LSTM 3-layer Neural Net<br>Random Forest Ensemble<br>Z-Score Baseline Model<br>ARIMA Time Series<br>Digital Twin Engine<br>Platform: Edge + Cloud Hybrid</div></div>
+          <div class="card filled"><div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;">Layer 3 · Blockchain</div><div class="xs txt2" style="line-height:2;">SHA-256 Hash Chaining<br>Merkle Tree Structure<br>Proof-of-Authority (PoA)<br>IPFS Decentralized Storage<br>7 Consensus Nodes<br>SRN API Integration<br>Block time: ~2.3 detik</div></div>
+        </div>
+      </div>
+    </div>
+    <div id="guide-refs" style="display:none;"><div class="card"><div class="card-ey" style="margin-bottom:12px;">23 Referensi Ilmiah — Basis NEXO</div><table class="NEXO-table"><thead><tr><th>#</th><th>Judul Singkat</th><th>Penulis / Sumber</th><th>Tahun</th><th>Komponen</th></tr></thead><tbody id="refs-tbody"></tbody></table></div></div>
+    <div id="guide-faq" style="display:none;"><div id="faq-list"></div></div>
+  </div>
+
+  </div><!-- end main-content -->
+</div><!-- end app -->
+
+<script>
+// ═══════ STATE ═══════
+let currentRole=null;
+const PASS='demo123';
+const roleNames={gov:'Pemerintah (KLHK)',corp:'Perusahaan',pub:'Masyarakat Umum'};
+const roleEmoji={gov:'🏛️',corp:'🏭',pub:'👥'};
+let sV={a:1247.3,b:312.8,c:87.4,d:201.6,e:563.9,f:433.7};
+let emHistory=[];
+let blockNum=9412;
+let prevHash=mkHash(9411);
+const BASELINE=2.847;
+let tickInterval;
+
+// ═══════ LOGIN ═══════
+function selectRole(r){
+  currentRole=r;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('role-'+r).classList.add('selected');
+  document.getElementById('login-fields').style.display='block';
+  if(r==='corp'){document.getElementById('id-label').textContent='NPWP Perusahaan';document.getElementById('id-hint').textContent='15 digit NPWP badan usaha';}
+  else{document.getElementById('id-label').textContent='NIK';document.getElementById('id-hint').textContent='16 digit Nomor Induk Kependudukan';}
+}
+function doLogin(){
+  if(!currentRole){alert('Silakan pilih peran terlebih dahulu.');return;}
+  const id=document.getElementById('inp-nik').value.trim();
+  const pass=document.getElementById('inp-pass').value;
+  const err=document.getElementById('login-err');
+  if(!id||pass!==PASS){err.style.display='block';return;}
+  err.style.display='none';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('user-avatar').textContent=roleEmoji[currentRole];
+  document.getElementById('user-name').textContent=roleNames[currentRole];
+  initApp();
+}
+function doLogout(){
+  currentRole=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('inp-nik').value='';
+  document.getElementById('inp-pass').value='';
+  document.getElementById('login-fields').style.display='none';
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  clearInterval(tickInterval);
+}
+
+// ═══════ NAVIGATION ═══════
+function goPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('sb-'+name).classList.add('active');
+}
+
+// ═══════ CLOCK ═══════
+setInterval(()=>{
+  const now=new Date();
+  const ts=now.toLocaleTimeString('id-ID',{hour12:false});
+  ['live-clock','mrv-ts'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=ts;});
+},1000);
+
+// ═══════ UTILS ═══════
+function rnd(lo,hi,d=2){return +(Math.random()*(hi-lo)+lo).toFixed(d);}
+function fmt(n){return n.toLocaleString('id-ID');}
+function fmtRp(n){if(n>=1e12)return'Rp '+(n/1e12).toFixed(2)+' T';if(n>=1e9)return'Rp '+(n/1e9).toFixed(2)+' Mn';if(n>=1e6)return'Rp '+(n/1e6).toFixed(2)+' Jt';return'Rp '+fmt(Math.round(n));}
+function mkHash(seed){const c='0123456789abcdef';let h='';for(let i=0;i<64;i++)h+=c[(seed*31+i*17+i*i*7+Math.floor(Math.random()*5))%16];return h;}
+function setTxt(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+function setBar(id,pct){const el=document.getElementById(id);if(el)el.style.width=Math.min(100,Math.max(2,pct))+'%';}
+function totalEm(){return +(Object.values(sV).reduce((a,b)=>a+b,0)/1000).toFixed(3);}
+
+// ═══════ SENSOR UPDATE ═══════
+const sensorTypes=['Sensor-A CEMS','Sensor-B Kendaraan','Sensor-C HFC','Sensor-D Limbah','Sensor-E Fugitif','Sensor-F Proses'];
+const facilityIds=['PLTU-JAWA1','KIL-CLG','SML-KAL','PKT-BTG','SEMEN-SB','PKT-GAS'];
+
+function updateSensors(){
+  sV.a+=rnd(-12,12);sV.a=Math.max(1100,Math.min(1400,sV.a));
+  sV.b+=rnd(-5,5);  sV.b=Math.max(270,Math.min(360,sV.b));
+  sV.c+=rnd(-1.5,2);sV.c=Math.max(70,Math.min(110,sV.c));
+  sV.d+=rnd(-3,3);  sV.d=Math.max(175,Math.min(230,sV.d));
+  sV.e+=rnd(-8,8);  sV.e=Math.max(510,Math.min(630,sV.e));
+  sV.f+=rnd(-5,5);  sV.f=Math.max(400,Math.min(480,sV.f));
+  const em=totalEm();
+  emHistory.push(em);
+  if(emHistory.length>24)emHistory.shift();
+
+  // Sidebar
+  setTxt('sb-emission',em.toFixed(3));
+
+  // Dashboard
+  setTxt('d-total',em.toFixed(3));
+  setTxt('d-tax',fmtRp(em*30000));
+  setTxt('d-blocks',fmt(blockNum));
+  setTxt('d-daily-tax',fmtRp(em*30000*24));
+  setTxt('d-monthly-tax',fmtRp(em*30000*24*30));
+  setTxt('d-annual-tax',fmtRp(em*30000*8760));
+  const dlt=((em-BASELINE)/BASELINE*100).toFixed(1);
+  const dEl=document.getElementById('d-delta');
+  if(dEl){dEl.textContent=(em>BASELINE?'▲ +':'▼ ')+Math.abs(dlt)+'% vs baseline';dEl.className='card-delta '+(em>BASELINE?'d-up':'d-dn');}
+
+  // IoT panel
+  setTxt('sa-val',fmt(Math.round(sV.a))); setBar('sa-bar',(sV.a-1100)/300*100);
+  setTxt('sb-val',sV.b.toFixed(1));       setBar('sb-bar',(sV.b-270)/90*100);
+  setTxt('sc-val',sV.c.toFixed(1));       setBar('sc-bar',(sV.c-70)/40*100);
+  setTxt('sd-val',sV.d.toFixed(1));       setBar('sd-bar',(sV.d-175)/55*100);
+  setTxt('se-val',sV.e.toFixed(1));       setBar('se-bar',(sV.e-510)/120*100);
+  setTxt('sf-val',sV.f.toFixed(1));       setBar('sf-bar',(sV.f-400)/80*100);
+  setTxt('acc-a',fmt(Math.round(sV.a))+' tCO₂e/h');
+  setTxt('acc-b',sV.b.toFixed(1)+' tCO₂e/h');
+  setTxt('acc-c',sV.c.toFixed(1)+' tCO₂e/h');
+  setTxt('acc-d',sV.d.toFixed(1)+' tCO₂e/h');
+  setTxt('acc-e',sV.e.toFixed(1)+' tCO₂e/h');
+  setTxt('acc-f',sV.f.toFixed(1)+' tCO₂e/h');
+  setTxt('acc-total',em.toFixed(3)+' tCO₂e/h');
+  setTxt('bc-total',fmt(blockNum));
+
+  drawChart();
+  addIoTRow(em);
+  addBlock(em);
+  updateAnomalyRows();
+  updateCalc();
+}
+
+// ═══════ CHART ═══════
+function drawChart(){
+  const data=emHistory;if(!data.length)return;
+  const W=900,H=150,pad=12,mn=2.3,mx=3.3;
+  const pts=data.map((v,i)=>({x:pad+(i/Math.max(data.length-1,1))*(W-2*pad),y:pad+(1-(v-mn)/(mx-mn))*(H-2*pad)}));
+  const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
+  const area=d+' L'+pts[pts.length-1].x+' '+(H-pad)+' L'+pad+' '+(H-pad)+' Z';
+  const pred=pts.map((p,i)=>({x:p.x,y:p.y+Math.sin(i*.3)*5-2})).map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
+  const cl=document.getElementById('chart-line'),ca=document.getElementById('chart-area'),pl=document.getElementById('pred-line'),lv=document.getElementById('live-pt');
+  if(cl)cl.setAttribute('d',d);if(ca)ca.setAttribute('d',area);if(pl)pl.setAttribute('d',pred);
+  if(lv&&pts.length){lv.setAttribute('cx',pts[pts.length-1].x);lv.setAttribute('cy',pts[pts.length-1].y);}
+  const ts=document.getElementById('chart-ts');
+  if(ts){ts.innerHTML='';const now=new Date();for(let i=0;i<6;i++){const t=new Date(now-(data.length-1-Math.floor(i*(data.length-1)/5))*5000);const s=document.createElement('span');s.textContent=t.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});s.style.cssText='font-size:10px;color:var(--text3);';ts.appendChild(s);}}
+}
+
+// ═══════ IoT FEED ═══════
+function addIoTRow(em){
+  const tbody=document.getElementById('iot-feed');if(!tbody)return;
+  const now=new Date(),si=Math.floor(Math.random()*6);
+  const flag=em>3.1?'<span style="color:var(--red);font-weight:600;">⚠</span>':em>2.9?'<span style="color:var(--gold);font-weight:600;">!</span>':'<span style="color:var(--green);font-weight:600;">✓</span>';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td class="mono" style="font-size:10px;color:var(--text3);">${now.toLocaleTimeString('id-ID',{hour12:false})}</td><td style="font-size:11px;font-weight:500;">${sensorTypes[si]}</td><td class="mono txt-blue" style="font-size:11px;">${rnd(395,425,1)}</td><td class="mono txt-orange" style="font-size:11px;">${rnd(16,22,1)}</td><td class="mono txt-purple" style="font-size:11px;">${rnd(85,95,1)}</td><td class="mono fw6" style="font-size:11px;">${em.toFixed(3)}</td><td style="text-align:center;">${flag}</td>`;
+  tbody.insertBefore(tr,tbody.firstChild);
+  while(tbody.children.length>7)tbody.removeChild(tbody.lastChild);
+}
+
+// ═══════ BLOCKCHAIN ═══════
+function addBlock(em){
+  const feed=document.getElementById('bc-feed');if(!feed)return;
+  blockNum++;
+  const hash=mkHash(blockNum);
+  const now=new Date();
+  const isFlag=em>3.1;
+  const cls=isFlag?'flagged':'latest';
+  const badge=isFlag?'<span class="tag red">⚠ FLAGGED</span>':'<span class="tag green">✓ VERIFIED · PoA 7/7</span>';
+  const si=Math.floor(Math.random()*6);
+  const npwp='0'+Math.floor(Math.random()*9)+'.'+String(Math.floor(Math.random()*999)).padStart(3,'0')+'.XXX';
+  const div=document.createElement('div');
+  div.innerHTML=`<div class="chain-link"><div class="chain-line"></div></div>
+    <div class="block-item ${cls}">
+      <div class="block-head"><span class="block-num">Block #${fmt(blockNum)}</span><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:10px;color:var(--text3);">${now.toLocaleTimeString('id-ID',{hour12:false})}.${String(now.getMilliseconds()).padStart(3,'0')}</span>${badge}</div></div>
+      <div class="block-hash">curr_hash: <span style="color:var(--blue);">${hash}</span><br>prev_hash: ${prevHash.substring(0,48)}...<br>merkle_root: ${mkHash(blockNum+50).substring(0,40)}...</div>
+      <div class="block-fields">
+        <div class="bf"><label>facility_id</label><span>${facilityIds[si]}</span></div>
+        <div class="bf"><label>npwp</label><span>${npwp}</span></div>
+        <div class="bf"><label>sensor_type</label><span>${sensorTypes[si]}</span></div>
+        <div class="bf"><label>tCO2e_hr</label><span style="color:var(--blue);font-weight:600;">${em.toFixed(3)}</span></div>
+        <div class="bf"><label>CO2_ppm</label><span>${rnd(400,420,1)}</span></div>
+        <div class="bf"><label>CH4_ppm</label><span>${rnd(16,22,1)}</span></div>
+        <div class="bf"><label>ai_score</label><span style="color:${isFlag?'var(--red)':'var(--green)'};">${isFlag?(3.5+rnd(0,.8)).toFixed(1):rnd(.1,1.8).toFixed(2)}</span></div>
+        <div class="bf"><label>tax_idr</label><span style="color:var(--gold);">${fmt(Math.round(em*30000))}</span></div>
+        <div class="bf"><label>scope</label><span>Scope-1</span></div>
+        <div class="bf"><label>hash_algo</label><span>SHA-256</span></div>
+        <div class="bf"><label>consensus</label><span>PoA-7/7</span></div>
+        <div class="bf"><label>srn_ref</label><span>SRN-${blockNum}</span></div>
+      </div>
+    </div>`;
+  feed.insertBefore(div,feed.firstChild);
+  prevHash=hash;
+  while(feed.children.length>5)feed.removeChild(feed.lastChild);
+  setTxt('bc-total',fmt(blockNum));
+}
+
+// ═══════ AI ANOMALY ═══════
+const anomSrc=[{n:'CO₂ Cerobong (Sensor A)',ic:'🏭',base:1200},{n:'CH₄ Kendaraan (Sensor B)',ic:'🚛',base:310},{n:'HFC Refrigerasi (Sensor C)',ic:'❄️',base:88},{n:'CH₄/N₂O Limbah (Sensor D)',ic:'♻️',base:200},{n:'Fugitif Migas (Sensor E)',ic:'🔧',base:555},{n:'Proses Kimia (Sensor F)',ic:'⚗️',base:430}];
+function updateAnomalyRows(){
+  const cont=document.getElementById('anomaly-rows');if(!cont)return;
+  cont.innerHTML='';
+  const vals=[sV.a,sV.b,sV.c,sV.d,sV.e,sV.f];
+  anomSrc.forEach((src,i)=>{
+    const score=Math.abs(vals[i]-src.base)/Math.max(src.base*.05,1);
+    const cls=score<1.5?'green':score<3?'gold':'red';
+    const clsV={green:'var(--green)',gold:'var(--gold)',red:'var(--red)'};
+    const pct=Math.min(100,score/5*100);
+    const icon=score<1.5?'✓':score<3?'!':'⚠';
+    cont.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="font-size:15px;width:24px;text-align:center;">${src.ic}</div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:500;">${src.n}</div><div style="height:4px;background:var(--surface2);border-radius:99px;margin-top:5px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${clsV[cls]};border-radius:99px;transition:width .5s;"></div></div></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${clsV[cls]};min-width:35px;text-align:right;">${score.toFixed(2)}</div>
+      <span class="tag ${cls}" style="padding:2px 7px;font-size:10px;">${icon}</span>
+    </div>`;
+  });
+}
+
+// ═══════ UNDER-REPORT TABLE ═══════
+function buildUnderreportTable(){
+  const tbody=document.getElementById('underreport-table');if(!tbody)return;
+  const data=[{n:'PLTU Jawa-1',m:1820,s:1938,f:'gold'},{n:'Kilang Cilacap',m:402,s:408,f:'green'},{n:'Smelter Kalimantan',m:165,s:201,f:'red'},{n:'PKT Bontang',m:294,s:300,f:'green'},{n:'Semen Gresik',m:820,s:834,f:'green'}];
+  tbody.innerHTML='';
+  data.forEach(r=>{
+    const dev=((r.s-r.m)/r.m*100).toFixed(1);
+    const score=(Math.abs(r.s-r.m)/r.m*10).toFixed(1);
+    const act=r.f==='red'?'<span class="tag red">⚠ Alert KLHK</span>':r.f==='gold'?'<span class="tag gold">! Investigasi</span>':'<span class="tag green">✓ Normal</span>';
+    tbody.innerHTML+=`<tr><td class="fw6">${r.n}</td><td class="mono">${fmt(r.m)} tCO₂e/h</td><td class="mono txt-blue fw6">${fmt(r.s)} tCO₂e/h</td><td class="mono" style="color:var(--${r.f});">+${dev}%</td><td class="mono fw6" style="color:var(--${r.f});">${score}</td><td>${act}</td></tr>`;
+  });
+}
+
+// ═══════ CALCULATOR ═══════
+function updateCalc(){
+  const em=+(document.getElementById('ci-emission')?.value||2.847);
+  const rate=+(document.getElementById('ci-rate')?.value||30000);
+  const period=+(document.getElementById('ci-period')?.value||8760);
+  const red=+(document.getElementById('ci-reduction')?.value||31.89)/100;
+  setTxt('cr-total',fmtRp(em*rate*period));
+  setTxt('cr-formula',em+' tCO₂e × Rp '+fmt(rate)+' × '+fmt(period)+' jam');
+  setTxt('cr-hourly',fmtRp(em*rate));
+  setTxt('cr-daily',fmtRp(em*rate*24));
+  setTxt('cr-monthly',fmtRp(em*rate*24*30));
+  setTxt('cr-annual',fmtRp(em*rate*8760));
+  const afterEm=em*(1-red);
+  setTxt('cr-target',afterEm.toFixed(3)+' tCO₂e/h');
+  setTxt('cr-after',fmtRp(afterEm*rate*period));
+  setTxt('cr-save',fmtRp((em-afterEm)*rate*period));
+}
+function runCalc(){updateCalc();}
+
+// ═══════ SIMULATOR ═══════
+const tiers=[{t:'Tier S ⭐',max:0,mult:0,c:'txt-green',act:'SPE-GRK issued otomatis'},{t:'Tier A ✓',max:500,mult:.5,c:'txt-green',act:'Insentif aktif · kredit karbon'},{t:'Tier B',max:5000,mult:1,c:'txt-blue',act:'Normal · monitoring standar'},{t:'Tier C !',max:50000,mult:1.5,c:'txt-gold',act:'Watch list · laporan bulanan'},{t:'Tier D ⚠',max:200000,mult:2.5,c:'txt-orange',act:'Public disclosure · moratorium'},{t:'Tier E ✗',max:Infinity,mult:4,c:'txt-red',act:'Moratorium + audit paksa + pidana'}];
+function runSim(){
+  const em=+(document.getElementById('sim-emission')?.value||75000);
+  const rate=+(document.getElementById('sim-rate')?.value||30000);
+  let tier=tiers[tiers.length-1];
+  for(const t of tiers)if(em<=t.max){tier=t;break;}
+  const el=document.getElementById('sim-tier');
+  if(el){el.textContent=tier.t;el.className='mono fw7 '+tier.c;}
+  setTxt('sim-mult',tier.mult+'×');
+  setTxt('sim-pajak',fmtRp(em*rate*tier.mult));
+  const actEl=document.getElementById('sim-action');
+  if(actEl)actEl.innerHTML='<span class="xs txt2">'+tier.act+'</span>';
+}
+
+// ═══════ COMPANIES ═══════
+const companies=[
+  {r:1,n:'PLN (Pembangkitan Jawa-Bali)',s:'Energi/PLTU',e:8420000,t:'tier-e',tr:'▲',f:'red'},
+  {r:2,n:'Pertamina RU-V Balikpapan',s:'Kilang Migas',e:2100000,t:'tier-e',tr:'▲',f:'red'},
+  {r:3,n:'Semen Indonesia',s:'Semen',e:980000,t:'tier-d',tr:'▼',f:''},
+  {r:4,n:'Krakatau Steel',s:'Baja',e:740000,t:'tier-d',tr:'▲',f:'gold'},
+  {r:5,n:'Petrokimia Gresik',s:'Pupuk & Kimia',e:430000,t:'tier-d',tr:'▼',f:''},
+  {r:6,n:'Indo Tambangraya (ITMG)',s:'Pertambangan',e:188000,t:'tier-c',tr:'▼',f:''},
+  {r:7,n:'Charoen Pokphand Indonesia',s:'Manufaktur',e:95000,t:'tier-c',tr:'—',f:''},
+  {r:8,n:'Unilever Indonesia',s:'FMCG',e:4200,t:'tier-b',tr:'▼',f:''},
+  {r:9,n:'Astra International',s:'Otomotif',e:1800,t:'tier-b',tr:'▼',f:''},
+  {r:10,n:'Bank Central Asia (BCA)',s:'Perbankan',e:320,t:'tier-a',tr:'▼',f:''},
+  {r:11,n:'Sido Muncul',s:'Farmasi',e:85,t:'tier-a',tr:'▼',f:''},
+  {r:12,n:'Bukit Asam (EBT Pilot)',s:'Energi Terbarukan',e:-1200,t:'tier-s',tr:'▼',f:''},
+];
+function buildCompaniesTable(){
+  const tbody=document.getElementById('companies-tbody');if(!tbody)return;
+  tbody.innerHTML='';
+  companies.forEach(c=>{
+    const tax=c.e>0?c.e*30000:0;
+    const tl=c.t.split('-')[1].toUpperCase();
+    const tc=c.tr==='▲'?'var(--red)':c.tr==='▼'?'var(--green)':'var(--text3)';
+    const fh=c.f==='red'?'<span class="tag red">⚠ Diflag AI</span>':c.f==='gold'?'<span class="tag gold">! Watch</span>':'<span class="tag green">✓ Normal</span>';
+    tbody.innerHTML+=`<tr><td class="mono txt3">${c.r}</td><td class="fw6">${c.n}</td><td><span class="tag blue">${c.s}</span></td><td class="mono txt-blue fw6" style="text-align:right;">${c.e>0?fmt(c.e):'<span style="color:var(--green);">'+c.e+' 🌱</span>'}</td><td class="mono txt-gold" style="text-align:right;">${tax>0?fmtRp(tax):'—'}</td><td><span class="tag ${c.t}" style="font-size:11px;font-weight:700;">${tl}</span></td><td class="mono fw7" style="color:${tc};text-align:center;">${c.tr}</td><td>${fh}</td></tr>`;
+  });
+}
+
+// ═══════ PANDUAN TABS ═══════
+function guideTab(name){
+  ['formula','arch','refs','faq'].forEach(n=>{document.getElementById('guide-'+n).style.display=n===name?'block':'none';});
+  document.querySelectorAll('.stab-btn').forEach((b,i)=>b.classList.toggle('active',['formula','arch','refs','faq'][i]===name));
+}
+// ═══════ PSTC TOKEN ENGINE ═══════
+let pstcMinted = 0;
+let pstcTotal = 1247; // cumulative simulated
+const IDX_PRICE = 70000;
+
+function updatePSTC(){
+  const em = totalEm();
+  const BASELINE_CAP = 2.9; // daily NDC cap tCO₂e/h
+  if(em < BASELINE_CAP){
+    const surplus = +((BASELINE_CAP - em) * 5).toFixed(2); // per 5-second interval → tokens
+    pstcMinted = +(pstcMinted + surplus).toFixed(2);
+    pstcTotal = +(pstcTotal + surplus).toFixed(2);
+  }
+  setTxt('pstc-minted', pstcMinted.toFixed(1)+' TCT');
+  setTxt('pstc-value', fmtRp(pstcMinted * IDX_PRICE));
+  setTxt('pstc-total', pstcTotal.toFixed(0).toLocaleString()+' TCT');
+  const statusEl=document.getElementById('pstc-status');
+  if(statusEl){
+    if(em < BASELINE_CAP){statusEl.textContent='⚡ Minting aktif';statusEl.className='tag green xs';}
+    else{statusEl.textContent='⏸ Kuota terlampaui';statusEl.className='tag gold xs';}
+  }
+}
+
+function buildRefs(){
+  const tbody=document.getElementById('refs-tbody');if(!tbody)return;
+  const refs=[['1','Pengungkapan Emisi Karbon & Audit Fees','Peneliti BEI, 2024','2024','Pajak · Akuntansi'],['2','e-Estonia Leapfrogging','Homburg (2026)','2026','Digitalisasi'],['3','Buletin Beyond Infinity Des 2025','Beyond Infinity','2025','Digital'],['4','Carbon Tax Policy Design','UNDP (2024)','2024','Pajak karbon'],['5','Chinese Industrial CEMS Network','Tang et al. 2023','2023','IoT/CEMS'],['6','OECD Effective Carbon Rates','OECD (2025)','2025','Benchmark'],['7','Determinan Pengungkapan Emisi','Univ. Lampung 2024','2024','GRI/CDP'],['8','Digital Tech Real-Time Carbon','Alavi-Borazjani 2025','2025','IoT+Blockchain'],['9','Digitalisasi Ekonomi Pedesaan','LIPI (2025)','2025','Infrastruktur'],['10','Akuntansi Karbon Fiskal Hijau','Firmansyah (2025)','2025','Kebijakan RI'],['11','Indonesia Carbon Market 2025','IDXCarbon 2025','2025','Pasar karbon'],['12','Indonesia Carbon Market White Paper','PwC 2024','2024','Regulasi'],['13','FOLU Net Sink 2030','KLHK (2022)','2022','NDC FOLU'],['14','Memperkuat Komitmen Iklim','BAPPENAS 2022','2022','NDC target'],['15','Cegah Greenwashing Perdagangan Karbon','Trend Asia 2025','2025','Anti-fraud'],['16','Dampak PP Pengungkapan Emisi','UMY (2014)','2014','Regulasi RI'],['17','Greenwashing 2026','BINUS Accounting','2026','ESG fraud'],['18','Konsistensi Kebijakan Deforestasi','Madani (2021)','2021','FOLU policy'],['19','MEE ETS Data Manipulation China','MEE China 2022','2022','Fraud case'],['20','Near-Real-Time Carbon Accounting','Liu et al. 2023','2023','AI/ML'],['21','State-of-Art CEMS Carbon Metering','Ding et al. 2025','2025','CEMS sensor'],['22','IoT Real-Time Carbon Monitoring','Duan et al. IEEE 2025','2025','IoT system'],['23','Trading Carbon Credit Tokens on Blockchain','Swinkels (IREF, 2024)','2024','PSTC · Token Karbon']];
+  refs.forEach(r=>tbody.innerHTML+=`<tr><td class="mono txt3">${r[0]}</td><td style="font-size:12px;">${r[1]}</td><td class="fw6 txt2">${r[2]}</td><td class="mono">${r[3]}</td><td><span class="tag blue" style="font-size:10px;">${r[4]}</span></td></tr>`);
+}
+function buildFAQ(){
+  const cont=document.getElementById('faq-list');if(!cont)return;
+  const faqs=[['Apa itu NEXO?','Next-gen Emission eXchange Operations menggantikan pelaporan MRV manual. Data sensor dikirim setiap 5 detik, divalidasi AI, lalu dicatat di blockchain secara immutable.'],['Mengapa Blockchain?','Kasus ETS China (2022) membuktikan data emisi bisa dimanipulasi. Blockchain meng-hash data sensor sebelum melewati server apapun — sekali tercatat, tidak bisa diubah.'],['Bagaimana Anomaly Detection AI bekerja?','Model LSTM dilatih histori 168 jam per fasilitas. Jika emisi aktual menyimpang >2 standar deviasi dari prediksi LSTM, sistem mengeluarkan flag. Deviasi >3.5 SD dikirim sebagai alert ke KLHK.'],['Apa dasar tarif Rp 30.000?','UU HPP No.7/2021 Pasal 13 menetapkan tarif minimum Rp 30.000/tCO₂e. Dibandingkan Swedia (Rp 2,08 Jt/tCO₂e), tarif Indonesia masih sangat rendah.'],['Apa itu Tier S–E?','Klasifikasi kinerja emisi berbasis data NEXO. Tier S = net-zero (reward penuh). Tier E = emisi kritis >200.000 tCO₂e/tahun (sanksi maksimal). Dihitung otomatis setiap malam.']];
+  faqs.forEach(([q,a])=>cont.innerHTML+=`<div class="card" style="margin-bottom:8px;"><div style="font-weight:600;color:var(--blue);margin-bottom:6px;font-size:13px;">❓ ${q}</div><div style="font-size:13px;color:var(--text2);line-height:1.65;">${a}</div></div>`);
+}
+
+// ═══════ INIT ═══════
+function initApp(){
+  for(let i=0;i<12;i++)emHistory.push(+(BASELINE+Math.sin(i*.5)*.2+rnd(-.1,.1)).toFixed(3));
+  drawChart();
+  updateSensors();
+  for(let i=0;i<3;i++)addBlock(+(BASELINE+rnd(-.2,.3)).toFixed(3));
+  for(let i=0;i<6;i++)addIoTRow(+(BASELINE+rnd(-.15,.25)).toFixed(3));
+  buildUnderreportTable();
+  updateAnomalyRows();
+  buildCompaniesTable();
+  updateCalc();
+  runSim();
+  buildRefs();
+  buildFAQ();
+  tickInterval=setInterval(()=>{updateSensors();updatePSTC();},5000); updatePSTC();
+}
+</script>
+</body>
+</html>
